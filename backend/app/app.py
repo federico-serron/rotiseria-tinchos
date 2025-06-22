@@ -9,6 +9,7 @@ from database import db                             # Acá importamos la base de
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask import send_from_directory
+from flask_migrate import Migrate
 
 load_dotenv()
 
@@ -33,19 +34,21 @@ app.register_blueprint(public_bp, url_prefix='/public')  # blueprint public_bp
 
 
 # DATABASE---------------
-db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance', 'mydatabase.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
+db.init_app(app)
 
+# Inicializar Flask-Migrate
+migrate = Migrate(app, db, compare_type=True)
+
+# with app.app_context():
+#     db.init_app(app)
+#     db.create_all() # Nos aseguramos que este corriendo en el contexto del proyecto.
+
+db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance', 'mydatabase.db')
 print(f"Ruta de la base de datos: {db_path}")
-
-
 if not os.path.exists(os.path.dirname(db_path)): # Nos aseguramos que se cree carpeta instance automatico para poder tener mydatabase.db dentro.
     os.makedirs(os.path.dirname(db_path))
-
-with app.app_context():
-    db.init_app(app)
-    db.create_all() # Nos aseguramos que este corriendo en el contexto del proyecto.
 # -----------------------
 
 # Ruta para servir el index.html del frontend
