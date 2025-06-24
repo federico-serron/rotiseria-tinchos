@@ -38,7 +38,7 @@ function Home() {
                 <a className="nav-link" href="#features">Features</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#api">API Demo</a>
+                <a className="nav-link" href="#api">Rotiseria Tincho's</a>
               </li>
             </ul>
           </div>
