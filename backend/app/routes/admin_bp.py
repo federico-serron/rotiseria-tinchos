@@ -14,7 +14,7 @@ jwt = JWTManager()
 # RUTA TEST de http://127.0.0.1:5000/admin_bp que muestra "Hola mundo":
 @admin_bp.route('/', methods=['GET'])
 def show_hello_world():
-     return "Hola mundo",200
+     return jsonify({"msg":"Hola mundo"}),200
 
 
 # RUTA CREAR USUARIO
