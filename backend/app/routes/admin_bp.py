@@ -24,16 +24,17 @@ def create_user():
         email = request.json.get('email')
         password = request.json.get('password')
         name = request.json.get('name')
+        phone = request.json.get('phone')
+        address = request.json.get('address')
 
-        if not email or not password or not name:
-            return jsonify({'error': 'Email, password and Name are required.'}), 400
+        if not email or not password or not name or not phone:
+            return jsonify({'error': 'Email, password, name and phone are required.'}), 400
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return jsonify({'error': 'Email already exists.'}), 409
 
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
 
         # Ensamblamos el usuario nuevo
         new_user = User(email=email, password=password_hash, name=name)
