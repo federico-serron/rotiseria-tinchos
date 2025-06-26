@@ -37,19 +37,13 @@ def create_user():
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
         # Ensamblamos el usuario nuevo
-        new_user = User(email=email, password=password_hash, name=name)
+        new_user = User(email=email, password=password_hash, name=name, phone=phone, address=address)
 
 
         db.session.add(new_user)
         db.session.commit()
 
-        good_to_share_user = {
-            'id': new_user.id,
-            'name':new_user.name,
-            'email':new_user.email
-        }
-
-        return jsonify({'message': 'User created successfully.','user_created':good_to_share_user}), 201
+        return jsonify({'message': 'User created successfully.','user_created':new_user.serialize()}), 201
 
     except Exception as e:
         return jsonify({'error': 'Error in user creation: ' + str(e)}), 500
