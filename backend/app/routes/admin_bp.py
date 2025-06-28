@@ -1,15 +1,13 @@
 from flask import Blueprint, request, jsonify # Blueprint para modularizar y relacionar con app
 from flask_bcrypt import Bcrypt                                  # Bcrypt para encriptación
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity   # Jwt para tokens
-from models import User                                          # importar tabla "User" de models
-from database import db                                          # importa la db desde database.py
+from app.models import User                                          # importar tabla "User" de models
+from app import db, bcrypt, jwt
 from datetime import timedelta                                   # importa tiempo especifico para rendimiento de token válido
-
+from app.services.auth_service import create_user_service
 
 admin_bp = Blueprint('admin', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
 
-bcrypt = Bcrypt()
-jwt = JWTManager()
 
 # RUTA TEST de http://127.0.0.1:5000/admin_bp que muestra "Hola mundo":
 @admin_bp.route('/', methods=['GET'])
@@ -20,30 +18,18 @@ def show_hello_world():
 # RUTA CREAR USUARIO
 @admin_bp.route('/users', methods=['POST'])
 def create_user():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    name = request.json.get('name')
+    phone = request.json.get('phone')
+    address = request.json.get('address')
+
+    if not email or not password or not name or not phone:
+        return jsonify({'error': 'Email, password, name and phone are required.'}), 400
+    
     try:
-        email = request.json.get('email')
-        password = request.json.get('password')
-        name = request.json.get('name')
-        phone = request.json.get('phone')
-        address = request.json.get('address')
-
-        if not email or not password or not name or not phone:
-            return jsonify({'error': 'Email, password, name and phone are required.'}), 400
-
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return jsonify({'error': 'Email already exists.'}), 409
-
-        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        # Ensamblamos el usuario nuevo
-        new_user = User(email=email, password=password_hash, name=name, phone=phone, address=address)
-
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        return jsonify({'message': 'User created successfully.','user_created':new_user.serialize()}), 201
+        new_user = create_user_service(email, password, name, phone, address)
+        return jsonify({'message': 'User created successfully.','user_created':new_user}), 201
 
     except Exception as e:
         return jsonify({'error': 'Error in user creation: ' + str(e)}), 500
