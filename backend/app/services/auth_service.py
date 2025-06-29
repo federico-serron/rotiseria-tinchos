@@ -18,4 +18,8 @@ def create_user_service(email, password, name, phone, address=None, role="user")
     db.session.commit()
     
     return new_user.serialize()
+
+def login_user_service(email, password):
+    
+    return 
     
