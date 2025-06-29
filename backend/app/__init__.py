@@ -16,6 +16,9 @@ migrate = Migrate()
 def create_app():
     load_dotenv()
 
+    """
+    We define static_folder because Flask is going to the serve the front end files since we are running everything from a single Dockerfile in production
+    """
     app = Flask(__name__, static_folder="front/build", static_url_path="/")
 
     # Configuración básica
