@@ -21,6 +21,7 @@ frontend/.vite/
 frontend/.parcel-cache/
 frontend/.env
 frontend/tsconfig.json
+frontend/index_copy.html
 
 # === LOGS ===
 *.log
