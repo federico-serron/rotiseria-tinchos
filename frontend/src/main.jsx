@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import Layout from './Layout.jsx'
 
 // Estilos globales
-import './styles/bootstrap.css'
 import './styles/style.css'
 import './styles/responsive.css'
 

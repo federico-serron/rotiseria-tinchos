@@ -1005,3 +1005,8 @@ a:focus {
   color: inherit;
 }
 /*# sourceMappingURL=style.css.map */
+
+.logo-navbar {
+  max-height: 7vh;
+  margin-right: 3vh;
+}

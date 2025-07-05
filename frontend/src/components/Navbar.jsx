@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUser, FaSearch, FaShoppingCart  } from "react-icons/fa";
-import { Link } from "react-router-dom"; // Si usás React Router
+import { Link } from "react-router-dom";
+import logo from "../assets/images/logoSvg.png"; 
 
 const Navbar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -11,10 +12,11 @@ const Navbar = () => {
 
   return (
 <header className="header_section" style={{ backgroundColor: "#111", padding: "1px 0", position: "sticky", top: 0, zIndex: 1030 }}>
-  <div className="container">
+  <div className="container-fluid">
     <nav className="navbar navbar-expand-lg custom_nav-container">
       <Link className="navbar-brand" to={"/"}>
-        <span>Feane</span>
+        <img src={logo} alt="Logo" className="img-fluid logo-navbar" />
+        <span>Rotiseria Tincho's</span>
       </Link>
 
       <button
@@ -30,7 +32,7 @@ const Navbar = () => {
         <i className="fa fa-bars" style={{ color: "white" }}></i>
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <div className="collapse navbar-collapse py-2" id="navbarSupportedContent">
         <ul className="navbar-nav mx-auto">
           <li className="nav-item active">
             <Link className="nav-link" to="/">Inicio</Link>
@@ -45,19 +47,19 @@ const Navbar = () => {
             <Link className="nav-link" to="/contact">Contactanos</Link>
           </li>
         </ul>
-        <div className="user_option d-flex align-items-center gap-3">
-          <Link to="/" className="user_link" style={{ color: "white" }}>
+        <div className="user_option ">
+          <Link to="/" className="user_link">
             <FaUser/>
           </Link>
-          <Link className="cart_link" to="#" style={{ color: "white" }}>
+          <Link className="cart_link" to="#">
             <FaShoppingCart />
           </Link>
           <form className="form-inline" onSubmit={e => e.preventDefault()}>
-            <button className="btn my-2 my-sm-0 nav_search-btn" type="submit" style={{ color: "white" }}>
+            <button className="btn" type="submit" style={{ color: "white" }}>
               <FaSearch />
             </button>
           </form>
-          <Link to="/" className="order_online" style={{ color: "white" }}>Order Online</Link>
+          <Link to="/" className="order_online" style={{ color: "white" }}>Ordenar Online</Link>
         </div>
       </div>
     </nav>
