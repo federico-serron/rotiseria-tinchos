@@ -22,7 +22,6 @@ const Layout = () => {
                 <Route exact path='/menu' element={<Food/>} />
                 <Route exact path='/about' element={<About/>} />
                 <Route exact path='/contact' element={<Booking/>} />
-
             </Routes>
         <Footer />
         </BrowserRouter>
