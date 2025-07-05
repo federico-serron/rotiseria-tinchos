@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUser, FaSearch } from "react-icons/fa";
+import { FaUser, FaSearch, FaShoppingCart  } from "react-icons/fa";
 import { Link } from "react-router-dom"; // Si usás React Router
 
 const Navbar = () => {
@@ -13,9 +13,9 @@ const Navbar = () => {
 <header className="header_section" style={{ backgroundColor: "#111", padding: "1px 0", position: "sticky", top: 0, zIndex: 1030 }}>
   <div className="container">
     <nav className="navbar navbar-expand-lg custom_nav-container">
-      <a className="navbar-brand" href="/">
+      <Link className="navbar-brand" to={"/"}>
         <span>Feane</span>
-      </a>
+      </Link>
 
       <button
         className="navbar-toggler"
@@ -33,31 +33,31 @@ const Navbar = () => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mx-auto">
           <li className="nav-item active">
-            <a className="nav-link" href="/">Home</a>
+            <Link className="nav-link" to="/">Inicio</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/menu">Menu</a>
+            <Link className="nav-link" to="/menu">Menu</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/about">About</a>
+            <Link className="nav-link" to="/about">Quienes somos?</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/book">Book Table</a>
+            <Link className="nav-link" to="/contact">Contactanos</Link>
           </li>
         </ul>
         <div className="user_option d-flex align-items-center gap-3">
-          <a href="/" className="user_link" style={{ color: "white" }}>
-            <i className="fa fa-user" aria-hidden="true"></i>
-          </a>
-          <a className="cart_link" href="#" style={{ color: "white" }}>
-            {/* Poné acá tu SVG carrito o algún ícono */}
-          </a>
+          <Link to="/" className="user_link" style={{ color: "white" }}>
+            <FaUser/>
+          </Link>
+          <Link className="cart_link" to="#" style={{ color: "white" }}>
+            <FaShoppingCart />
+          </Link>
           <form className="form-inline" onSubmit={e => e.preventDefault()}>
             <button className="btn my-2 my-sm-0 nav_search-btn" type="submit" style={{ color: "white" }}>
-              <i className="fa fa-search" aria-hidden="true"></i>
+              <FaSearch />
             </button>
           </form>
-          <a href="/" className="order_online" style={{ color: "white" }}>Order Online</a>
+          <Link to="/" className="order_online" style={{ color: "white" }}>Order Online</Link>
         </div>
       </div>
     </nav>

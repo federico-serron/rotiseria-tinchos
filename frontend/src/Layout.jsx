@@ -5,6 +5,9 @@ import injectContext from './js/store/appContext.jsx';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Footer from './components/Footer.jsx';
 import Navbar from './components/Navbar.jsx';
+import Booking from './components/Booking.jsx';
+import Food from './components/Food.jsx';
+import About from './components/About.jsx';
 
 
 const Layout = () => {
@@ -16,6 +19,10 @@ const Layout = () => {
         <Navbar />
             <Routes>
                 <Route exact path='/' element={<Home/>} />
+                <Route exact path='/menu' element={<Food/>} />
+                <Route exact path='/about' element={<About/>} />
+                <Route exact path='/contact' element={<Booking/>} />
+
             </Routes>
         <Footer />
         </BrowserRouter>
