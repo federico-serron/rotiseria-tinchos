@@ -41,7 +41,11 @@ def create_app():
     # Registrar blueprints
     from app.routes.admin_bp import admin_bp
     from app.routes.public_bp import public_bp
+    from app.routes.menu_bp import menu_bp
+    
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(public_bp, url_prefix='/public')
+    app.register_blueprint(menu_bp, url_prefix='/menu')
+    
 
     return app
