@@ -11,3 +11,11 @@ menu_bp = Blueprint('menu', __name__)     # instanciar admin_bp desde clase Blue
 @menu_bp.route('/', methods=['GET'])
 def show_hello_world():
      return jsonify({"msg":"Soy el menu"}),200
+
+@menu_bp.route('/demo')
+def demo():
+    return jsonify({'msg':'Este es un mensaje que viene desde el backend, especificamente la Demo Page... :)'}), 200
+
+@menu_bp.route('/about')
+def about():
+    return jsonify({'msg':'About Page'})
