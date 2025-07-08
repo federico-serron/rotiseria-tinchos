@@ -1,5 +1,17 @@
 from app import db, bcrypt, jwt
 from app.models import User
+from app.exceptions import NotFoundError, UnauthorizedError, BadRequestError
+
+def is_user_admin(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    
+    if not user or user is None:
+        raise NotFoundError("No existe el usuario con este email")
+    
+    if user.role != 'admin':
+        raise UnauthorizedError("Usuario no tiene permisos para acceder")
+    
+    return True
 
 def create_user_service(email, password, name, phone, address=None, role="user"):
     
