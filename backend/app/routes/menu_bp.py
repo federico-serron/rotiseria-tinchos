@@ -4,13 +4,23 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from app.models import User                                          # importar tabla "User" de models
 from app import db, bcrypt, jwt
 from datetime import timedelta                                   # importa tiempo especifico para rendimiento de token válido
-from app.services.auth_service import create_user_service
+from app.services.menu_service import get_menu_service
+from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
 menu_bp = Blueprint('menu', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
 
 @menu_bp.route('/', methods=['GET'])
-def show_hello_world():
-     return jsonify({"msg":"Soy el menu"}),200
+def get_menu():
+    try:
+        menu_list = get_menu_service()
+        return jsonify({'menu': menu_list}), 200
+
+    except NotFoundError as e:
+        return jsonify({'error': str(e)}), 200
+
+    except Exception as e:
+        return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
+
 
 @menu_bp.route('/demo')
 def demo():

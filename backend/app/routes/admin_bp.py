@@ -29,7 +29,7 @@ def create_user():
     
     try:
         new_user = create_user_service(email, password, name, phone, address)
-        return jsonify({'message': 'User created successfully.','user_created':new_user}), 201
+        return jsonify({'msg': 'User created successfully.','user_created':new_user}), 201
 
     except Exception as e:
         return jsonify({'error': 'Error in user creation: ' + str(e)}), 500
