@@ -61,8 +61,8 @@ class Menu(db.Model):
             'description': self.description,
             'is_available': self.is_available,
             'category_id': self.category.id,
-            'media_id': self.media.id,
-            'invoice_menus': [invoice_menu.serialize() for invoice_menu in self.invoice_menus]
+            #'media_id': self.media.id,
+            #'invoice_menus': [invoice_menu.serialize() for invoice_menu in self.invoice_menus]
         }
     
     

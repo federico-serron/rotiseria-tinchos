@@ -34,3 +34,20 @@ def add_menu_item_service(name, description, price, category_id):
     db.session.commit()
         
     return new_menu_item.serialize()
+
+
+def edit_menu_item_service(id, **kwargs):
+    
+    item = Menu.query.filter_by(id=id).first()
+    if not item:
+        raise NotFoundError("No se encontro el menu a editar")
+    
+    updatebale_fields = ['name', 'description', 'price', 'category_id', 'is_available']
+    
+    for key,value in kwargs.items():
+        if key in updatebale_fields:
+            setattr(item, key, value)
+            
+    db.session.commit()
+    
+    return item.serialize()
