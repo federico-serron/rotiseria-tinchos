@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from app.models import User                                          # importar tabla "User" de models
 from app import db, bcrypt, jwt
 from datetime import timedelta                                   # importa tiempo especifico para rendimiento de token válido
-from app.services.menu_service import get_menu_service, add_menu_item_service
+from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce
 from app.services.auth_service import is_user_admin
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
@@ -47,6 +47,60 @@ def add_menu_item():
        
     except ConflictError as e:
         return jsonify({'error':str(e)}), 400        
+    
+    except Exception as e:
+        return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
+      
+      
+
+@menu_bp.route('/<int:id>', methods=['PUT'])
+@jwt_required()
+def edit_menu_item(id):
+    data = request.get_json()
+    user_id = get_jwt_identity()
+    
+    try:
+        user_admin = is_user_admin(user_id)
+        
+        if not data:
+            raise ValueError("Faltan datos")
+
+        updated_item = edit_menu_item_service(id,**data)
+        return jsonify({'msg': 'Menu actualizado correctamente','menu_item':updated_item}), 200
+
+    except ValueError as e:
+        return jsonify({'error':str(e)}), 400
+    
+    except UnauthorizedError as e:
+        return jsonify({'error':str(e)}), 401
+       
+    except NotFoundError as e:
+        return jsonify({'error':str(e)}), 404
+    
+    except Exception as e:
+        return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
+    
+    
+@menu_bp.route('/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_menu_item(id):
+    user_id = get_jwt_identity()
+    
+    try:
+        user_admin = is_user_admin(user_id)
+        
+        deleted_menu_item = delete_menu_item_serivce(id)
+        if deleted_menu_item:
+            return jsonify({'msg': 'Menu eliminado correctamente'}), 200
+    
+    except ValueError as e:
+        return jsonify({'error':str(e)}), 400
+    
+    except UnauthorizedError as e:
+        return jsonify({'error':str(e)}), 401
+       
+    except NotFoundError as e:
+        return jsonify({'error':str(e)}), 404
     
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
