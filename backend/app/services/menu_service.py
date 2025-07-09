@@ -37,6 +37,19 @@ def add_menu_item_service(name, description, price, category_id):
 
 
 def edit_menu_item_service(id, **kwargs):
+    """
+    Updates an item from the menu
+    
+    Receives:
+        id -> menu id
+        **kwargs -> dictornary sent it form the frontend as a json
+    
+    Returns:
+        dict -> menu item updated
+            
+    Raises:
+        NotFoundError: If no menu item is found.
+    """
     
     item = Menu.query.filter_by(id=id).first()
     if not item:
@@ -51,3 +64,15 @@ def edit_menu_item_service(id, **kwargs):
     db.session.commit()
     
     return item.serialize()
+
+
+def delete_menu_item_serivce(id):
+    item = Menu.query.filter_by(id=id).first()
+    
+    if not item:
+        raise NotFoundError("No se encontro el menu a eliminar")
+    
+    item.is_available = False
+    db.session.commit()
+    
+    return True
