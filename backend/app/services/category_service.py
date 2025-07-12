@@ -28,3 +28,36 @@ def add_category_service(**kwargs):
     db.session.commit()
     
     return new_category.serialize()
+
+
+def edit_category_service(id, **kwargs):
+    
+    category = Category.query.filter_by(id=id).first()
+    if not category:
+        raise NotFoundError("No se encontro la categoria a editar")
+    
+    allowed_fields = ['name', 'note', 'media_id']
+    
+    for key,value in kwargs.items():
+        if key in allowed_fields:
+            setattr(category, key, value)
+            
+    db.session.commit()
+    
+    return category.serialize()
+
+
+def delete_category_serivce(id):
+    
+    if not id:
+        raise BadRequestError("No indicaste que categoria deseas eliminar")
+    
+    category = Category.query.filter_by(id=id).first()
+    
+    if not category:
+        raise NotFoundError("No se encontro la categoria a eliminar")
+    
+    db.session.delete(category)
+    db.session.commit()
+    
+    return True
