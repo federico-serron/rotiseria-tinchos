@@ -1,11 +1,7 @@
 from flask import Blueprint, request, jsonify # Blueprint para modularizar y relacionar con app
-from flask_bcrypt import Bcrypt                                  # Bcrypt para encriptación
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity   # Jwt para tokens
-from app.models import User                                          # importar tabla "User" de models
-from app import db, bcrypt, jwt
-from datetime import timedelta                                   # importa tiempo especifico para rendimiento de token válido
-from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce
+from flask_jwt_extended import jwt_required, get_jwt_identity   # Jwt para tokens
 from app.services.auth_service import is_user_admin
+from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
 menu_bp = Blueprint('menu', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
@@ -17,7 +13,7 @@ def get_menu():
         return jsonify({'menu': menu_list}), 200
 
     except NotFoundError as e:
-        return jsonify({'error': str(e)}), 200
+        return jsonify({'error': str(e)}), 404
 
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
