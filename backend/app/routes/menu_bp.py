@@ -13,7 +13,7 @@ def get_menu():
         return jsonify({'menu': menu_list}), 200
 
     except NotFoundError as e:
-        return jsonify({'error': str(e)}), 200
+        return jsonify({'error': str(e)}), 404
 
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500

@@ -14,7 +14,7 @@ def get_categories():
         return jsonify({'categories': categories_list}), 200
 
     except NotFoundError as e:
-        return jsonify({'error': str(e)}), 200
+        return jsonify({'error': str(e)}), 404
 
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
@@ -24,8 +24,23 @@ def get_categories():
 @jwt_required()
 def add_category():
     
+    data = request.get_json()
+    user_id = get_jwt_identity() 
+    
     try:
-        pass
+        user_admin = is_user_admin(user_id)
+        
+        if 'name' not in data or 'note' not in data:
+            raise BadRequestError("Nombre y Nota son necesarios")
+        
+        new_category = add_category_service(**data)
+        return jsonify({'msg': 'Categoria creada correctamente','category':new_category}), 201
+    
+    except ConflictError as e:
+        return jsonify({'error': str(e)}), 400
+    
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
         
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
