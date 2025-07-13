@@ -1,6 +1,10 @@
 from app import db, bcrypt, jwt
 from app.models import User
 from app.exceptions import NotFoundError, UnauthorizedError, BadRequestError, ConflictError
+from datetime import timedelta
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
+
 
 def is_user_admin(user_id):
     user = User.query.filter_by(id=user_id).first()
@@ -44,5 +48,23 @@ def create_user_service(**kwargs):
 
 def login_user_service(email, password):
     
-    return 
+    if not email or not password:
+        raise BadRequestError("Email y Contrasena son obligatorios")
     
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        raise NotFoundError(f"No se encontro un usuario con el email {email}")
+
+    password_from_db = user.password
+    true_o_false = bcrypt.check_password_hash(password_from_db, password)
+        
+    if true_o_false:
+        expires = timedelta(days=1)
+
+        user_id = user.id
+        role = user.role
+        access_token = create_access_token(identity=str(user_id), expires_delta=expires)
+        
+        return access_token
+    else:
+        raise ConflictError("Usuario y/o contrasena incorrectos")

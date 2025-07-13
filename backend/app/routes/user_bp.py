@@ -2,8 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app.models import User
 from app import bcrypt
-from datetime import timedelta
-from app.services.auth_service import create_user_service
+from app.services.auth_service import create_user_service, login_user_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
 user_bp = Blueprint('user', __name__)
@@ -37,35 +36,25 @@ def create_user():
 @user_bp.route('/login', methods=['POST'])
 def get_token():
     try:
-        #  Primero chequeamos que por el body venga la info necesaria:
         email = request.json.get('email')
         password = request.json.get('password')
-
-        if not email or not password:
-            return jsonify({'error': 'Email and password are required.'}), 400
         
-        # Buscamos al usuario con ese correo electronico ( si lo encuentra lo guarda ):
-        login_user = User.query.filter_by(email=request.json['email']).one()
+        login_successfull_token = login_user_service(email, password)
+        return jsonify({"access_token": login_successfull_token}), 200
 
-        # Verificamos que el password sea correcto:
-        password_from_db = login_user.password #  Si loguin_user está vacio, da error y se va al "Except".
-        true_o_false = bcrypt.check_password_hash(password_from_db, password)
-        
-        # Si es verdadero generamos un token y lo devuelve en una respuesta JSON:
-        if true_o_false:
-            expires = timedelta(minutes=30)  # pueden ser "hours", "minutes", "days","seconds"
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
 
-            user_id = login_user.id       # recuperamos el id del usuario para crear el token...
-            access_token = create_access_token(identity=str(user_id), expires_delta=expires)   # creamos el token con tiempo vencimiento
-            return jsonify({ 'access_token':access_token}), 200  # Enviamos el token al front ( si es necesario serializamos el "login_user" y tambien lo enviamos en el objeto json )
+    except ConflictError as e:
+        return jsonify({'error': str(e)}), 400
 
-        else:
-            return {"Error":"Contraseña  incorrecta"}
-    
+    except NotFoundError as e:
+        return jsonify({'error': str(e)}), 404
+
     except Exception as e:
         return {"Error":"El email proporcionado no corresponde a ninguno registrado: " + str(e)}, 500
     
-# EJEMPLO DE RUTA RESTRINGIDA POR TOKEN. ( LA MISMA RECUPERA TODOS LOS USERS Y LO ENVIA PARA QUIEN ESTÉ LOGUEADO )
+
     
 @user_bp.route('/users')
 @jwt_required()  # Decorador para requerir autenticación con JWT
