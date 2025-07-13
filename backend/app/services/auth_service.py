@@ -1,4 +1,4 @@
-from app import db, bcrypt, jwt
+from app import db, bcrypt
 from app.models import User
 from app.exceptions import NotFoundError, UnauthorizedError, BadRequestError, ConflictError
 from datetime import timedelta
@@ -46,6 +46,7 @@ def create_user_service(**kwargs):
     
     return new_user.serialize()
 
+
 def login_user_service(email, password):
     
     if not email or not password:
@@ -63,8 +64,25 @@ def login_user_service(email, password):
 
         user_id = user.id
         role = user.role
-        access_token = create_access_token(identity=str(user_id), expires_delta=expires)
+        access_token = create_access_token(identity=str(user_id), expires_delta=expires, additional_claims={"role": role})
         
         return access_token
     else:
         raise ConflictError("Usuario y/o contrasena incorrectos")
+    
+def edit_user_service(user_id, **kwargs):
+    
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        raise NotFoundError("No se encontro el usuario")
+    
+    editable_fields = ['name', 'password', 'phone', 'address']
+    for key, value in kwargs.items():
+        if key in editable_fields and value:
+            setattr(user, key, value)
+        else:
+            raise BadRequestError(f"No puedes editar el campo {key}")
+        
+    db.session.commit()
+    
+    return user.serialize()
