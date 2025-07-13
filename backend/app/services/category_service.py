@@ -41,7 +41,9 @@ def edit_category_service(id, **kwargs):
     for key,value in kwargs.items():
         if key in allowed_fields and value:
             setattr(category, key, value)
-            
+        else:
+            raise BadRequestError(f"No puedes editar el campo {key}")
+        
     db.session.commit()
     
     return category.serialize()
