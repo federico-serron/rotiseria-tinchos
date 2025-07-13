@@ -81,8 +81,12 @@ class Category(db.Model):
             'id': self.id,
             'name': self.name,
             'note': self.note,
-            'menus': [menu.serialize() for menu in self.menus],
             'media_id': self.media_id
+        }
+        
+    def get_category_menus(self):
+        return {
+            'menus': [menu.serialize() for menu in self.menus]
         }
     
     

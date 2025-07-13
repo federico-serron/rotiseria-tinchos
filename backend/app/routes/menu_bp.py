@@ -35,9 +35,13 @@ def add_menu_item():
     try:
         user_admin = is_user_admin(user_id)
         
+        price = int(price)
         new_menu_item = add_menu_item_service(name, description, price, category_id)
         return jsonify({'msg': 'Menu creado satisfactoriamente','menu_item':new_menu_item}), 201
     
+    except (TypeError, ValueError):
+        return jsonify({"error": "El precio debe ser un número"}), 400
+
     except UnauthorizedError as e:
         return jsonify({'error':str(e)}), 401
        

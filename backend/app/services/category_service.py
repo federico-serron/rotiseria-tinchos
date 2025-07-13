@@ -39,7 +39,7 @@ def edit_category_service(id, **kwargs):
     allowed_fields = ['name', 'note', 'media_id']
     
     for key,value in kwargs.items():
-        if key in allowed_fields:
+        if key in allowed_fields and value:
             setattr(category, key, value)
             
     db.session.commit()
@@ -47,7 +47,7 @@ def edit_category_service(id, **kwargs):
     return category.serialize()
 
 
-def delete_category_serivce(id):
+def delete_category_service(id):
     
     if not id:
         raise BadRequestError("No indicaste que categoria deseas eliminar")
