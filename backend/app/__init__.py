@@ -26,10 +26,8 @@ def create_app():
     else:
         config_class = DevelopmentConfig
         
-    print(config_class)
-
     """
-    We define static_folder because Flask is going to the serve the front end files since we are running everything from a single Dockerfile in production
+    We define static_folder because Flask is going to serve the front end files since we are running everything from a single Dockerfile in production
     """
     app = Flask(__name__, static_folder="front/build", static_url_path="/")
     
