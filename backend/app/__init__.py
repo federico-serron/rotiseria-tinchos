@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from app.config import DevelopmentConfig, TestingConfig, ProductionConfig
 
 # Instancias que se inicializan más adelante
 db = SQLAlchemy()
@@ -15,15 +16,24 @@ migrate = Migrate()
 
 def create_app():
     load_dotenv()
+    
+    enviroment = os.getenv("FLASK_ENV", "development")
 
+    if enviroment == "production":
+        config_class = ProductionConfig
+    elif enviroment == "testing":
+        config_class = TestingConfig
+    else:
+        config_class = DevelopmentConfig
+        
     """
-    We define static_folder because Flask is going to the serve the front end files since we are running everything from a single Dockerfile in production
+    We define static_folder because Flask is going to serve the front end files since we are running everything from a single Dockerfile in production
     """
     app = Flask(__name__, static_folder="front/build", static_url_path="/")
-
+    
     # Configuración básica
-    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config.from_object(config_class)
+    
 
     # Extensiones
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)

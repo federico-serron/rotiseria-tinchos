@@ -37,7 +37,7 @@ def login():
         password = request.json.get('password')
         
         login_successfull_token = login_user_service(email, password)
-        return jsonify({"access_token": login_successfull_token}), 200
+        return jsonify({"msg": "Has iniciado sesion exitosamente", "access_token": login_successfull_token}), 200
 
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
