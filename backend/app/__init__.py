@@ -52,11 +52,13 @@ def create_app():
     from app.routes.user_bp import user_bp
     from app.routes.menu_bp import menu_bp
     from app.routes.category_bp import category_bp
+    from app.routes.invoice_bp import invoice_bp
     
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(menu_bp, url_prefix='/menu')
     app.register_blueprint(category_bp, url_prefix='/categories')
+    app.register_blueprint(invoice_bp, url_prefix='/invoices')
     
 
     return app
