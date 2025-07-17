@@ -78,7 +78,10 @@ def edit_user_service(user_id, **kwargs):
     
     editable_fields = ['name', 'password', 'phone', 'address']
     for key, value in kwargs.items():
-        if key in editable_fields and value:
+        if key == 'password':
+            password_hash = bcrypt.generate_password_hash(value).decode('utf-8')
+            setattr(user, key, password_hash)
+        elif key in editable_fields and value:
             setattr(user, key, value)
         else:
             raise BadRequestError(f"No puedes editar el campo {key}")
