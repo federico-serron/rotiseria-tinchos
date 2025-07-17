@@ -2,6 +2,20 @@ from app import db, bcrypt, jwt
 from app.models import User, Menu, Invoice, InvoiceMenu
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
+
+def get_user_invoices(user_id):
+    user = User.query.filter_by(id=user_id)
+    if not user:
+        raise NotFoundError("No se encontro el usuario")
+    
+    user_invoices = Invoice.query.filter_by(user_id=user_id).all()
+    if not user_invoices:
+        raise NotFoundError("No tienes facturas")
+    
+    return [invoice.serialize() for invoice in user_invoices]
+
+
+
 def add_invoice_menu_service(user_id, items: list[dict]):
     
     user = User.query.get(user_id)
