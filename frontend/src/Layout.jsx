@@ -8,6 +8,7 @@ import Navbar from './components/Navbar.jsx';
 import Booking from './components/Booking.jsx';
 import Food from './components/Food.jsx';
 import About from './components/About.jsx';
+import Login from './views/Login.jsx';
 
 
 const Layout = () => {
@@ -22,6 +23,7 @@ const Layout = () => {
                 <Route exact path='/menu' element={<Food/>} />
                 <Route exact path='/about' element={<About/>} />
                 <Route exact path='/contact' element={<Booking/>} />
+                <Route exact path='/login' element={<Login/>} />
             </Routes>
         <Footer />
         </BrowserRouter>

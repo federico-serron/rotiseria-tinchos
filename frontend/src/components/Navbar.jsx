@@ -38,20 +38,20 @@ const Navbar = () => {
             <Link className="nav-link" to="/">Inicio</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/menu">Menu</Link>
+            <Link className="nav-link" to="/menu">Menú</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/about">Quienes somos?</Link>
+            <Link className="nav-link" to="/about">¿Quiénes somos?</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/contact">Contactanos</Link>
+            <Link className="nav-link" to="/contact">Contáctanos</Link>
           </li>
         </ul>
         <div className="user_option ">
-          <Link to="/" className="user_link">
+        <Link to="/login" className="user_link">
             <FaUser/>
           </Link>
-          <Link className="cart_link" to="#">
+        <Link className="cart_link" to="#">
             <FaShoppingCart />
           </Link>
           <form className="form-inline" onSubmit={e => e.preventDefault()}>
