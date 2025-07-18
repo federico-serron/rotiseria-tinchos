@@ -24,7 +24,7 @@ def create_user_service(**kwargs):
     missing_fields = [field for field in required_fields if kwargs.get(field) in [None, ""]]
     
     if missing_fields:
-        raise BadRequestError(f"Faltan campos obligatorios: {", ".join(missing_fields)}")
+        raise BadRequestError(f"Faltan campos obligatorios: {', '.join(missing_fields)}")
     
     email = kwargs.get('email')
     password = kwargs.get('password')
