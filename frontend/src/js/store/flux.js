@@ -3,7 +3,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			personas: ["Pedro","Maria"],
+			personas: ["Pedro", "Maria"],
 			demoMsg: "",
 			message: "",
 			error: "",
@@ -15,8 +15,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const URLsignup = `${backendUrl}/user/signup`;
 				const store = getStore()
 
-				if(!name || !email || !password || !phone){
-					setStore({...store, error: "Completa todos los campos."})
+				if (!name || !email || !password || !phone) {
+					setStore({ ...store, error: "Completa todos los campos." })
 					return false;
 
 				}
@@ -44,17 +44,63 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-
-					setStore({...store, message: data.msg, logged_user: data.user})
+					setStore({ ...store, message: data.msg })
 					return true
 
 				} catch (error) {
-					setStore({...store, error: error.message})
+					setStore({ ...store, error: error.message })
 					console.error(store.error)
 					return false
 				}
 
-		},
+			},
+
+
+			login: async (email, password) => {
+				const URLlogin = `${backendUrl}/user/login`;
+				const store = getStore()
+
+				if (!email || !password) {
+					setStore({ ...store, error: "Completa todos los campos." })
+					return false;
+
+				}
+
+				try {
+					const userData = {
+						email: email,
+						password: password
+					}
+
+					const response = await fetch(URLlogin, {
+						method: "POST",
+						body: JSON.stringify(userData),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+					if (!data.access_token) {
+						throw new Error(data.error);
+					}
+
+					localStorage.setItem("token", data.access_token)
+
+					setStore({ ...store, message: data.msg})
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
 		}
 	};
 };
