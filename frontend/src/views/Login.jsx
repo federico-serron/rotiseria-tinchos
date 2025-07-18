@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const initialState = {
     name: '',
@@ -77,6 +78,10 @@ export default function Login() {
                         <input type="text" name="address" className="form-control" value={form.address} onChange={handleChange} autoComplete="address" />
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Ingresar</button>
+                    <div className="text-center mt-3">
+                        <span>¿No tenés cuenta? </span>
+                        <Link to="/signup" className="btn btn-link p-0 align-baseline">Registrate</Link>
+                    </div>
                 </form>
             </div>
         </div>
