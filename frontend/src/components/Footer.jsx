@@ -20,19 +20,19 @@ const Footer = () => {
           {/* Contact */}
           <div className="col-md-4 footer-col">
             <div className="footer_contact">
-              <h4>Contact Us</h4>
+              <h4>Contacto</h4>
               <div className="contact_link_box">
                 <a href="#">
                   <FaMapMarker aria-hidden="true" />
-                  <span>Location</span>
+                  <span className="px-1">Ubicacion</span>
                 </a>
                 <a href="tel:+011234567890">
                   <FaPhone aria-hidden="true" />
-                  <span>Call +01 1234567890</span>
+                  <span className="px-1">Llama a +598 1234567890</span>
                 </a>
                 <a href="mailto:demo@gmail.com">
                   <FaEnvelope aria-hidden="true" />
-                  <span>demo@gmail.com</span>
+                  <span className="px-1">tinchos@gmail.com</span>
                 </a>
               </div>
             </div>
@@ -42,40 +42,29 @@ const Footer = () => {
           <div className="col-md-4 footer-col">
             <div className="footer_detail">
               <a href="#" className="footer-logo">
-                Feane
+                Rotiseria Tincho's
               </a>
-              <p>
-                Necessary, making this the first true generator on the Internet.
-                It uses a dictionary of over 200 Latin words, combined with
-              </p>
               <div className="footer_social">
                 <a href="#"><FaFacebook /></a>
-                <a href="#"><FaTwitter /></a>
-                <a href="#"><FaLinkedin /></a>
                 <a href="#"><FaInstagram /></a>
-                <a href="#"><FaPinterest /></a>
               </div>
             </div>
           </div>
 
           {/* Hours */}
           <div className="col-md-4 footer-col">
-            <h4>Opening Hours</h4>
-            <p>Everyday</p>
-            <p>10.00 Am - 10.00 Pm</p>
+            <h4>Horarios</h4>
+            <p>Lunes a Viernes</p>
+            <p>10.00 - 14.00 </p>
           </div>
         </div>
 
         {/* Footer Info */}
         <div className="footer-info">
           <p>
-            &copy; {year} All Rights Reserved By{" "}
-            <a href="https://html.design/">Free Html Templates</a>
-            <br />
-            <br />
-            &copy; {year} Distributed By{" "}
-            <a href="https://themewagon.com/" target="_blank" rel="noreferrer">
-              ThemeWagon
+            &copy; {year} Made By{" "}
+            <a href="https://www.fserron.com/" target="_blank" rel="noreferrer">
+              Federico Serron
             </a>
           </p>
         </div>

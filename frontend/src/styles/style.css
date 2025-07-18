@@ -902,7 +902,7 @@ a:focus {
 .footer_section {
   background-color: #222831;
   color: #ffffff;
-  padding: 75px 0 40px 0;
+  padding: 25px 0 10px 0;
   text-align: center;
 }
 
@@ -913,7 +913,7 @@ a:focus {
 .footer_section h4,
 .footer_section .footer-logo {
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-family: 'Dancing Script', cursive;
 }
 
@@ -993,7 +993,7 @@ a:focus {
 
 .footer_section .footer-info {
   text-align: center;
-  margin-top: 25px;
+  margin-top: 5px;
 }
 
 .footer_section .footer-info p {

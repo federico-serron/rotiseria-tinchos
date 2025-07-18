@@ -10,14 +10,33 @@ services:
     env_file:
       - ./backend/.env.prod
     ports:
-      - "5100:5100"
+      - "5200:5200"
     volumes:
-      - ./instance:/app/backend/app/instance  # Para que se persista la DB en local
+      - ./instance:/app/backend/app/instance 
     networks:
       - app-network
-  postgresql:
-    
+    depends_on:
+      - tinchos_db
+
+  tinchos_db:
+    image: postgres:16
+    container_name: tinchos_postgresdb
+    restart: always 
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      POSTGRES_USER: tinchosroot
+      POSTGRES_PASSWORD: tinchosweb
+      POSTGRES_DB: tinchos
+    volumes:
+      - tinchos_pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  tinchos_pgdata:
+    driver: local

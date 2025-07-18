@@ -1,3 +1,4 @@
+# Setear FLASK_APP para flask db upgrade
 # Etapa 1: Build frontend
 FROM node:20-alpine as frontend-builder
 WORKDIR /app
@@ -23,6 +24,8 @@ COPY backend/ ./backend/
 # Copiar el build del frontend al lugar donde Flask lo sirve
 COPY --from=frontend-builder /app/dist ./backend/app/front/build
 
-EXPOSE 5100
+ENV FLASK_APP=app/run.py
 
-CMD ["gunicorn", "--chdir", "backend/app", "app:app", "--bind", "0.0.0.0:5100", "--workers", "4", "--worker-class", "gevent"]
+EXPOSE 5200
+
+CMD bash -c "cd backend && flask db upgrade && gunicorn app.run:app --bind 0.0.0.0:5200 --workers 4 --worker-class gevent"

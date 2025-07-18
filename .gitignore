@@ -10,6 +10,7 @@ instance/
 .env.*
 backend/.env
 backend/.env.prod
+.pytest_cache
 
 !backend/.env.example
 
@@ -44,3 +45,5 @@ Thumbs.db
 
 # === GIT ===
 .git/
+
+docker-compose.yml

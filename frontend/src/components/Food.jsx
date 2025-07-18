@@ -4,83 +4,83 @@ const menuItems = [
   {
     id: 1,
     category: "pizza",
-    title: "Delicious Pizza",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Pizza Casera",
+    description: "Nuestra pizza artesanal, con masa suave y salsa de tomate casera. ¡Ideal para compartir!",
     price: 20,
     img: "/images/f1.png",
   },
   {
     id: 2,
     category: "burger",
-    title: "Delicious Burger",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Hamburguesa Clásica",
+    description: "Carne de primera, pan fresco y los mejores ingredientes. ¡Probá nuestra especialidad!",
     price: 15,
     img: "/images/f2.png",
   },
   {
     id: 3,
     category: "pizza",
-    title: "Delicious Pizza",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Pizza Napolitana",
+    description: "Con tomate, mozzarella, jamón y aceitunas. Un clásico de la rotisería.",
     price: 17,
     img: "/images/f3.png",
   },
   {
     id: 4,
     category: "pasta",
-    title: "Delicious Pasta",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Pasta Casera",
+    description: "Fideos frescos con salsa a elección: boloñesa, crema o mixta.",
     price: 18,
     img: "/images/f4.png",
   },
   {
     id: 5,
     category: "fries",
-    title: "French Fries",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Papas Fritas",
+    description: "Crocantes y doradas, perfectas para acompañar cualquier plato.",
     price: 10,
     img: "/images/f5.png",
   },
   {
     id: 6,
     category: "pizza",
-    title: "Delicious Pizza",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Pizza Fugazzeta",
+    description: "Rellena de queso y cebolla, una opción irresistible.",
     price: 15,
     img: "/images/f6.png",
   },
   {
     id: 7,
     category: "burger",
-    title: "Tasty Burger",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Hamburguesa Completa",
+    description: "Con queso, jamón, huevo y todos los toppings. ¡Para los más hambrientos!",
     price: 12,
     img: "/images/f7.png",
   },
   {
     id: 8,
     category: "burger",
-    title: "Tasty Burger",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Hamburguesa Vegetariana",
+    description: "Hecha con vegetales frescos y pan artesanal. Sabor y salud en cada bocado.",
     price: 14,
     img: "/images/f8.png",
   },
   {
     id: 9,
     category: "pasta",
-    title: "Delicious Pasta",
-    description: "Veniam debitis quaerat officiis quasi cupiditate quo, quisquam velit, magnam voluptatem repellendus sed eaque",
+    title: "Ravioles de Verdura",
+    description: "Rellenos de espinaca y ricota, acompañados con salsa a elección.",
     price: 10,
     img: "/images/f9.png",
   },
 ];
 
 const categories = [
-  { key: "*", label: "All" },
-  { key: "burger", label: "Burger" },
-  { key: "pizza", label: "Pizza" },
-  { key: "pasta", label: "Pasta" },
-  { key: "fries", label: "Fries" },
+  { key: "*", label: "Todo" },
+  { key: "burger", label: "Hamburguesas" },
+  { key: "pizza", label: "Pizzas" },
+  { key: "pasta", label: "Pastas" },
+  { key: "fries", label: "Papas Fritas" },
 ];
 
 // SVG carrito para reutilizar
@@ -148,7 +148,7 @@ export default function FoodSection() {
     <section className="food_section layout_padding-bottom">
       <div className="container">
         <div className="heading_container heading_center">
-          <h2>Our Menu</h2>
+          <h2>Nuestro Menú</h2>
         </div>
 
         <ul className="filters_menu d-flex justify-content-center mb-4">
@@ -180,7 +180,7 @@ export default function FoodSection() {
 
         <div className="btn-box text-center mt-4">
           <a href="#" className="btn btn-outline-primary">
-            View More
+            Ver más opciones
           </a>
         </div>
       </div>

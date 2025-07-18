@@ -17,14 +17,12 @@ const Hero = () => {
                   <div className="row">
                     <div className="col-md-7 col-lg-6">
                       <div className="detail-box">
-                        <h1>Fast Food Restaurant</h1>
+                        <h1>Rotisería Tinchos</h1>
                         <p>
-                          Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia
-                          laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore,
-                          iste magni quos nihil ducimus libero ipsam.
+                          Comidas caseras, frescas y listas para llevar. Disfrutá nuestras pizzas, pastas, hamburguesas y mucho más, preparados con ingredientes de calidad y el sabor de siempre. ¡Sentite como en casa!
                         </p>
                         <div className="btn-box">
-                          <a href="/" className="btn1">Order Now</a>
+                          <a href="/" className="btn1">¡Hacé tu pedido!</a>
                         </div>
                       </div>
                     </div>

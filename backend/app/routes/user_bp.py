@@ -18,7 +18,7 @@ def create_user():
     
         data = request.get_json()
         new_user = create_user_service(**data)
-        return jsonify({'msg': 'User created successfully.','user':new_user}), 201
+        return jsonify({'msg': 'Usuario creado exitosamente!','user':new_user}), 201
     
     except ConflictError as e:
         return jsonify({'error': str(e)}), 400
@@ -37,7 +37,7 @@ def login():
         password = request.json.get('password')
         
         login_successfull_token = login_user_service(email, password)
-        return jsonify({"msg": "Has iniciado sesion exitosamente", "access_token": login_successfull_token}), 200
+        return jsonify({"msg": "Has iniciado sesion exitosamente!", "access_token": login_successfull_token}), 200
 
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
