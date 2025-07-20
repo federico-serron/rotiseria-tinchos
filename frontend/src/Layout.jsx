@@ -29,7 +29,11 @@ const Layout = () => {
                 <Route exact path='/contact' element={<Booking/>} />
                 <Route exact path='/login' element={<Login/>} />
                 <Route exact path='/signup' element={<Signup/>} />
-                <Route exact path='/dashboard'element={<ProtectedRoute requiredRole="admin"> <Dashboard/></ProtectedRoute>}/>
+                <Route exact path='/dashboard'element={
+                  <ProtectedRoute>
+                     <Dashboard/>
+                  </ProtectedRoute>
+                }/>
                 <Route exact path='/*' element={<h1 className='text-center'>Not Found!</h1>} />
             </Routes>
         <Footer />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const navItems = [
   { to: '/dashboard', label: 'Inicio' },
@@ -9,7 +10,8 @@ const navItems = [
   { to: '/dashboard/configuracion', label: 'Configuración' },
 ];
 
-export default function Dashboard() {
+const Dashboard = () => {
+  const {role, userId} = useAuth()
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -89,3 +91,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;
