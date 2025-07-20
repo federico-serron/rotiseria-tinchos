@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from app.models import User
 from app import bcrypt
 from app.services.auth_service import create_user_service, login_user_service, edit_user_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
+from app.blacklist import BLACKLIST
 
 user_bp = Blueprint('user', __name__)
 
@@ -85,4 +86,17 @@ def show_users():
             user_list.append(user.serialize())
         return jsonify(user_list), 200
     else:
-        return {"Error": "Token inválido o no proporcionado"}, 401
+        return {"error": "Token inválido o no proporcionado"}, 401
+    
+    
+@user_bp.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    
+    try:
+        jti = get_jwt()["jti"]
+        BLACKLIST.add(jti)
+        return jsonify({"msg": "Sesion terminada"}), 200
+        
+    except Exception as e:
+        return jsonify({"error": "Por alguna razon no pudimos temrinar tu sesion!"}), 500
