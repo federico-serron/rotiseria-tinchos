@@ -91,7 +91,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					localStorage.setItem("access_token", data.access_token)
 
-					setStore({ ...store, message: data.msg})
+					setStore({ ...store, message: data.msg })
 					return true
 
 				} catch (error) {
@@ -100,6 +100,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false
 				}
 
+			},
+
+			logout: async () => {
+				const URLlogout = `${backendUrl}/user/logout`;
+				const store = getStore();
+				const token = localStorage.getItem("access_token")
+
+				if (!token) {
+					setStore({ ...store, error: "Debes loguearte antes de desloguearte!" })
+					return false
+				}
+
+				try {
+
+					const response = await fetch(URLlogout, {
+						method: "POST",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem('access_token')}`,
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					localStorage.removeItem("access_token")
+					setStore({ ...store, logged_user: {} })
+
+					return true;
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					return false;
+				}
 			},
 		}
 	};
