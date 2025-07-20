@@ -13,6 +13,7 @@ import Login from './views/Login.jsx';
 import Signup from './views/Singup.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AdminDashboard from './views/AdminDashboard.jsx';
 
 
 const Layout = () => {
@@ -30,8 +31,13 @@ const Layout = () => {
                 <Route exact path='/login' element={<Login/>} />
                 <Route exact path='/signup' element={<Signup/>} />
                 <Route exact path='/dashboard'element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole='user' >
                      <Dashboard/>
+                  </ProtectedRoute>
+                }/>
+                <Route exact path='/admin'element={
+                  <ProtectedRoute requiredRole='admin' >
+                     <AdminDashboard/>
                   </ProtectedRoute>
                 }/>
                 <Route exact path='/*' element={<h1 className='text-center'>Not Found!</h1>} />

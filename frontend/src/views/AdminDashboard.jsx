@@ -3,12 +3,14 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const navItems = [
-  { to: '/dashboard', label: 'Perfil' },
+  { to: '/dashboard', label: 'Inicio' },
+  { to: '/dashboard/usuarios', label: 'Usuarios' },
   { to: '/dashboard/pedidos', label: 'Pedidos' },
   { to: '/dashboard/productos', label: 'Productos' },
+  { to: '/dashboard/configuracion', label: 'Configuración' },
 ];
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const {role, userId} = useAuth()
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -27,7 +29,7 @@ const Dashboard = () => {
           }`}
         >
           <div className="d-flex flex-md-column flex-row flex-nowrap align-items-center align-items-md-start px-3 pt-3 text-dark min-vh-100">
-            <span className="fs-4 fw-bold mb-4 d-none d-md-block">Usuario</span>
+            <span className="fs-4 fw-bold mb-4 d-none d-md-block">Panel Admin</span>
             <ul className="nav nav-pills flex-md-column flex-row mb-auto w-100 justify-content-center justify-content-md-start">
               {navItems.map((item) => (
                 <li className="nav-item w-100" key={item.to}>
@@ -56,7 +58,30 @@ const Dashboard = () => {
 
             {/* Dashboard Content */}
             <div className="row">
-              Hola 
+              <div className="col-md-4">
+                <div className="card text-white bg-primary mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title">Usuarios</h5>
+                    <p className="card-text">120 registrados</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="card text-white bg-success mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title">Pedidos</h5>
+                    <p className="card-text">45 completados</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="card text-white bg-warning mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title">Productos</h5>
+                    <p className="card-text">230 disponibles</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <Outlet />
@@ -67,4 +92,4 @@ const Dashboard = () => {
   );
 }
 
-export default Dashboard;
+export default AdminDashboard;

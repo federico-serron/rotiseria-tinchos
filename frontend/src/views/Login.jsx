@@ -1,29 +1,30 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { Context } from '../js/store/appContext';
+import { jwtDecode } from 'jwt-decode';
+
+const Login = () => {
 
 
+    const initialState = {
+        email: '',
+        password: ''
+    };
 
-const initialState = {
-    email: '',
-    password: ''
-};
 
+    const validateEmail = (email) => {
+        return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    };
 
-const validateEmail = (email) => {
-    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-};
-
-export default function Login() {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
 
     const [form, setForm] = useState(initialState);
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
-    
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -47,14 +48,35 @@ export default function Login() {
             const resp = await actions.login(form.email, form.password)
             if (resp) {
                 toast.success(store.message)
-                navigate('/dashboard')
+                const token = localStorage.getItem("access_token")
+                const decoded = jwtDecode(token)
+
+                if (decoded.role == 'admin') {
+                    navigate('/admin')
+                } else {
+                    navigate('/dashboard')
+                }
             }
-            else{
+            else {
                 toast.error(store.error)
                 return
             }
         }
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem("access_token")
+        if (token) {
+            const decoded = jwtDecode(token)
+
+            if (decoded.role == 'admin') {
+                navigate('/admin')
+            } else {
+                navigate('/dashboard')
+            }
+        }
+
+    }, []);
 
     return (
         <div className="d-flex justify-content-center py-4 align-items-center min-vh-100">
@@ -86,3 +108,5 @@ export default function Login() {
         </div>
     );
 }
+
+export default Login;
