@@ -9,17 +9,6 @@ import Booking from '../components/Booking.jsx';
 function Home() {
   const { store, actions } = useContext(Context);
 
-  useEffect(() => {
-    const getMsgDemo = async () => {
-      const msg = await actions.demoFunction();
-      if (!msg) {
-        store.demoMsg = "Error fetching message";
-        return false;
-      }
-    };
-    getMsgDemo();
-  }, []);
-
   return (
     <div className="min-vh-100 d-flex flex-column">
       
