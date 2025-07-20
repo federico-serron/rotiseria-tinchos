@@ -11,6 +11,10 @@ import Food from './components/Food.jsx';
 import About from './components/About.jsx';
 import Login from './views/Login.jsx';
 import Signup from './views/Singup.jsx';
+import Dashboard from './views/Dashboard.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AdminDashboard from './views/AdminDashboard.jsx';
+import NotFound from './views/NotFound.jsx';
 
 
 const Layout = () => {
@@ -27,7 +31,17 @@ const Layout = () => {
                 <Route exact path='/contact' element={<Booking/>} />
                 <Route exact path='/login' element={<Login/>} />
                 <Route exact path='/signup' element={<Signup/>} />
-                <Route exact path='/*' element={<h1 className='text-center'>Not Found!</h1>} />
+                <Route exact path='/dashboard'element={
+                  <ProtectedRoute requiredRole='user' >
+                     <Dashboard/>
+                  </ProtectedRoute>
+                }/>
+                <Route exact path='/admin'element={
+                  <ProtectedRoute requiredRole='admin' >
+                     <AdminDashboard/>
+                  </ProtectedRoute>
+                }/>
+                <Route path='*' element={<NotFound/>} />
             </Routes>
         <Footer />
         </BrowserRouter>
