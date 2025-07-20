@@ -14,6 +14,7 @@ import Signup from './views/Singup.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AdminDashboard from './views/AdminDashboard.jsx';
+import NotFound from './views/NotFound.jsx';
 
 
 const Layout = () => {
@@ -40,7 +41,7 @@ const Layout = () => {
                      <AdminDashboard/>
                   </ProtectedRoute>
                 }/>
-                <Route exact path='/*' element={<h1 className='text-center'>Not Found!</h1>} />
+                <Route path='*' element={<NotFound/>} />
             </Routes>
         <Footer />
         </BrowserRouter>
