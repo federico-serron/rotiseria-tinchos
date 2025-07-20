@@ -11,6 +11,8 @@ import Food from './components/Food.jsx';
 import About from './components/About.jsx';
 import Login from './views/Login.jsx';
 import Signup from './views/Singup.jsx';
+import Dashboard from './views/Dashboard.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 
 const Layout = () => {
@@ -27,6 +29,7 @@ const Layout = () => {
                 <Route exact path='/contact' element={<Booking/>} />
                 <Route exact path='/login' element={<Login/>} />
                 <Route exact path='/signup' element={<Signup/>} />
+                <Route exact path='/dashboard'element={<ProtectedRoute requiredRole="admin"> <Dashboard/></ProtectedRoute>}/>
                 <Route exact path='/*' element={<h1 className='text-center'>Not Found!</h1>} />
             </Routes>
         <Footer />

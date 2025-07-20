@@ -89,7 +89,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					localStorage.setItem("token", data.access_token)
+					localStorage.setItem("access_token", data.access_token)
 
 					setStore({ ...store, message: data.msg})
 					return true
