@@ -3,11 +3,11 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const navItems = [
-  { to: '/dashboard', label: 'Inicio' },
-  { to: '/dashboard/usuarios', label: 'Usuarios' },
-  { to: '/dashboard/pedidos', label: 'Pedidos' },
-  { to: '/dashboard/productos', label: 'Productos' },
-  { to: '/dashboard/configuracion', label: 'Configuración' },
+  { to: '/admin', label: 'Inicio' },
+  { to: '/admin/usuarios', label: 'Usuarios' },
+  { to: '/admin/pedidos', label: 'Pedidos' },
+  { to: '/admin/productos', label: 'Productos' },
+  { to: '/admin/configuracion', label: 'Configuración' },
 ];
 
 const AdminDashboard = () => {
@@ -36,6 +36,7 @@ const AdminDashboard = () => {
                   <Link
                     to={item.to}
                     className={`nav-link w-100 text-start ${location.pathname === item.to ? 'active' : ''}`}
+                    onClick={() => setIsSidebarOpen(false)}
                   >
                     {item.label}
                   </Link>

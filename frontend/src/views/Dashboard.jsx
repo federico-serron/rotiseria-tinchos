@@ -34,6 +34,8 @@ const Dashboard = () => {
                   <Link
                     to={item.to}
                     className={`nav-link w-100 text-start ${location.pathname === item.to ? 'active' : ''}`}
+                    onClick={() => setIsSidebarOpen(false)}
+
                   >
                     {item.label}
                   </Link>
