@@ -104,27 +104,24 @@ const ListMenu = () => {
         onSuccess={handleSuccess}
         initialData={selectedItem || {}}
         onConfirm={(formData) => {
-          if (selectedItem) {
-            actions.editMenuItem(
-              selectedItem.id,
-              formData.name,
-              formData.price,
-              formData.description,
-              formData.category_id,
-              formData.image
-            );
-          } else {
-            actions.addMenuItem(
-              formData.name,
-              formData.price,
-              formData.description,
-              formData.category_id,
-              formData.image
-            );
+          const data = new FormData();
+          data.append('name', formData.name);
+          data.append('price', formData.price);
+          data.append('description', formData.description);
+          data.append('category_id', formData.category_id);
+          if (formData.image) {
+            data.append('image', formData.image);
           }
+
+          if (selectedItem) {
+            actions.editMenuItem(selectedItem.id, data);
+          } else {
+            actions.addMenuItem(data);
+          }
+
           handleSuccess();
         }}
-        onCancel={()=>setSelectedItem(null)}
+        onCancel={() => setSelectedItem(null)}
       />
 
       {/* Delete Confirmation Modal */}
