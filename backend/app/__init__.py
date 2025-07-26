@@ -34,6 +34,11 @@ def create_app():
     # Configuración básica
     app.config.from_object(config_class)
     
+    upload_folder_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'])
+    if not os.path.exists(upload_folder_path):
+        os.makedirs(upload_folder_path)
+        
+    app.config['UPLOAD_FOLDER'] = upload_folder_path
 
     # Extensiones
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)

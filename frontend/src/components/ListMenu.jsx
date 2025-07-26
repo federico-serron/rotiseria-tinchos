@@ -34,6 +34,23 @@ const ListMenu = () => {
     modal?.hide();
   };
 
+  const handleSubmit = async (data) => {
+    let resp = false;
+    if (selectedItem) {
+      resp = await actions.editMenuItem(selectedItem.id, data);
+    } else {
+      resp = await actions.addMenuItem(data);
+    }
+
+    if (!resp) {
+      toast.error(store.error)
+      return
+    }
+    toast.success(store.message)
+
+    handleSuccess();
+  }
+
   useEffect(() => {
     const fetchMenuItems = async () => {
       const resp = await actions.getMenuItems();
@@ -72,20 +89,20 @@ const ListMenu = () => {
           </tr>
         </thead>
         <tbody>
-          {store.menu.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
+          {store.menu.map((item, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
               <td>
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={item.path ? `${import.meta.env.VITE_BACKEND_URL}/${item.path}` : 'https://cdn.pixabay.com/photo/2014/12/21/23/36/burgers-575655_1280.png'}
+                  className='rounded '
                   style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                 />
               </td>
               <td>{item.name}</td>
               <td>{item.price}</td>
               <td>{item.description}</td>
-              <td>{item.available ? 'Sí' : 'No'}</td>
+              <td className={item.is_available ? 'bold text-success' : 'text-danger'}>{item.is_available ? 'Sí' : 'No'}</td>
               <td>{item.category}</td>
               <td>
                 <div className="d-flex align-items-center">
@@ -116,23 +133,17 @@ const ListMenu = () => {
         message={selectedItem ? 'Editar ítem del menú' : 'Crear nuevo ítem'}
         onSuccess={handleSuccess}
         initialData={selectedItem || {}}
-        onConfirm={(formData) => {
+        onConfirm={async (formData) => {
           const data = new FormData();
           data.append('name', formData.name);
           data.append('price', formData.price);
           data.append('description', formData.description);
-          data.append('category_id', formData.category_id);
+          data.append('category_id', 1);
           if (formData.image) {
             data.append('image', formData.image);
           }
+          handleSubmit(data)
 
-          if (selectedItem) {
-            actions.editMenuItem(selectedItem.id, data);
-          } else {
-            actions.addMenuItem(data);
-          }
-
-          handleSuccess();
         }}
         onCancel={() => setSelectedItem(null)}
       />

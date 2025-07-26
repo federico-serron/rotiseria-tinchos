@@ -61,7 +61,7 @@ class Menu(db.Model):
             'description': self.description,
             'is_available': self.is_available,
             'category_id': self.category.id,
-            #'media_id': self.media.id,
+            'path': self.media.path if self.media else None,
             #'invoice_menus': [invoice_menu.serialize() for invoice_menu in self.invoice_menus]
         }
     

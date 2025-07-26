@@ -211,62 +211,57 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			addMenuItem: async (formData) => {
 				const URLAddMenuItem = `${backendUrl}/menu/`;
-				const store = getStore()
-
-				if (!formData.name || !formData.price || !formData.description || !formData.category_id) {
-					setStore({ ...store, error: "Completa todos los campos." })
-					return false;
-
-				}
+				const store = getStore();
 
 				try {
-
 					const response = await fetch(URLAddMenuItem, {
 						method: "POST",
 						headers: {
-							Authorization: `Bearer ${localStorage.getItem("access_token")}`
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							// NO pongas Content-Type acá
 						},
-						body: formData
-					})
+						body: formData // esto tiene que ir crudo, sin stringify
+					});
 
-					const data = await response.json()
+					const data = await response.json();
 
 					if (!response.ok) {
-						throw new Error(data.error);
-					}
-					if (!data.menu_item) {
-						throw new Error(data.error);
+						throw new Error(data.error || "Error desconocido");
 					}
 
-					setStore({ ...store, message: data.msg, menu: [...store.menu, data.menu_item] })
-					return true
+					if (!data.menu_item) {
+						throw new Error("Faltan datos del menú");
+					}
+
+					setStore({
+						...store,
+						message: data.msg,
+						menu: [...store.menu, data.menu_item]
+					});
+
+					return true;
 
 				} catch (error) {
-					setStore({ ...store, error: error.message })
-					console.error(store.error)
-					return false
+					setStore({ ...store, error: error.message });
+					console.error("Error al agregar ítem del menú:", error.message);
+					return false;
 				}
-
 			},
+
 
 			editMenuItem: async (id, formData) => {
 				const URLeditMenuItem = `${backendUrl}/menu/${id}`;
 				const store = getStore()
 
-				if (!id || !formData.name || !formData.price || !formData.description || !formData.category_id) {
-					setStore({ ...store, error: "Completa todos los campos." })
-					return false;
-
-				}
-
 				try {
-
+					const jsonData = Object.fromEntries(formData.entries());
 					const response = await fetch(URLeditMenuItem, {
 						method: "PUT",
 						headers: {
-							Authorization: `Bearer ${localStorage.getItem("access_token")}`
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							"Content-Type": "application/json"
 						},
-						body: formData
+						body: JSON.stringify(jsonData)
 					})
 
 					const data = await response.json()

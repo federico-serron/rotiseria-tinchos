@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../js/store/appContext';
+
 
 const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, initialData = {}, onCancel }) => {
 
