@@ -50,44 +50,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					"premium": true
 				}
 			],
-			menu: [
-				{
-					"id": 1,
-					"image": "https://via.placeholder.com/50",
-					"name": "Pizza Napolitana",
-					"price": 12.99,
-					"description": "Pizza clásica con tomate, mozzarella y albahaca.",
-					"available": true,
-					"category": "Pizzas"
-				},
-				{
-					"id": 2,
-					"image": "https://via.placeholder.com/50",
-					"name": "Hamburguesa Clásica",
-					"price": 8.99,
-					"description": "Hamburguesa con carne de res, lechuga, tomate y queso.",
-					"available": true,
-					"category": "Hamburguesas"
-				},
-				{
-					"id": 3,
-					"image": "https://via.placeholder.com/50",
-					"name": "Ensalada César",
-					"price": 7.5,
-					"description": "Ensalada fresca con pollo, crutones y aderezo César.",
-					"available": false,
-					"category": "Ensaladas"
-				},
-				{
-					"id": 4,
-					"image": "https://via.placeholder.com/50",
-					"name": "Pasta Alfredo",
-					"price": 10.5,
-					"description": "Pasta con salsa Alfredo cremosa y queso parmesano.",
-					"available": true,
-					"category": "Pastas"
-				}
-			],
+			menu: [],
 		},
 		actions: {
 
@@ -217,6 +180,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ ...store, error: error.message })
 					return false;
 				}
+			},
+
+			getMenuItems: async () => {
+				const URLgetMenuItems = `${backendUrl}/menu/`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(URLgetMenuItems, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, menu: data.menu })
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
 			},
 
 			addMenuItem: async (formData) => {

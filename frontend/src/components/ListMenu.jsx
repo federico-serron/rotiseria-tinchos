@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../js/store/appContext';
 import MenuModal from './MenuModal.jsx';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ListMenu = () => {
   const { store, actions } = useContext(Context);
@@ -32,6 +33,18 @@ const ListMenu = () => {
     const modal = window.bootstrap.Modal.getInstance(modalEl);
     modal?.hide();
   };
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      const resp = await actions.getMenuItems();
+      if (!resp) {
+        toast.error(store.error)
+        return
+      }
+
+    }
+    fetchMenuItems();
+  }, []);
 
   return (
     <div className="table-responsive pt-2">
