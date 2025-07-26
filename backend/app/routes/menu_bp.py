@@ -22,10 +22,12 @@ def get_menu():
 @menu_bp.route('/', methods=['POST'])
 @jwt_required()
 def add_menu_item():
-    name = request.json.get('name')
-    description = request.json.get('description')
-    price = request.json.get('price')
-    category_id = request.json.get('category_id')
+    name = request.form.get('name')
+    description = request.form.get('description')
+    price = request.form.get('price')
+    category_id = request.form.get('category_id')
+    image = request.files.get("image", None)
+    
     user_id = get_jwt_identity()
     
     
@@ -36,17 +38,20 @@ def add_menu_item():
         user_admin = is_user_admin(user_id)
         
         price = int(price)
-        new_menu_item = add_menu_item_service(name, description, price, category_id)
+        new_menu_item = add_menu_item_service(name, description, price, category_id, image)
         return jsonify({'msg': 'Menu creado satisfactoriamente','menu_item':new_menu_item}), 201
     
-    except (TypeError, ValueError):
-        return jsonify({"error": "El precio debe ser un número"}), 400
+    except (TypeError):
+        return jsonify({"error": str(e)}), 400
 
     except UnauthorizedError as e:
         return jsonify({'error':str(e)}), 401
        
     except ConflictError as e:
         return jsonify({'error':str(e)}), 400        
+    
+    except ValueError as e:
+        return jsonify({'error':str(e)}), 400  
     
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500

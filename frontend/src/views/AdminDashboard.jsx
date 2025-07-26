@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
-const navItems = [
-  { to: '/admin', label: 'Inicio' },
-  { to: '/admin/usuarios', label: 'Usuarios' },
-  { to: '/admin/pedidos', label: 'Pedidos' },
-  { to: '/admin/productos', label: 'Productos' },
-  { to: '/admin/configuracion', label: 'Configuración' },
-];
-
 const AdminDashboard = () => {
-  const {role, userId} = useAuth()
+  const navItems = [
+    { to: '/admin', label: 'Inicio' },
+    { to: '/admin/users', label: 'Usuarios' },
+    { to: '/admin/pedidos', label: 'Pedidos' },
+    { to: '/admin/menu', label: 'Productos' },
+    { to: '/admin/configuracion', label: 'Configuración' },
+  ];
+
+
+  const { role, userId } = useAuth()
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -24,9 +25,8 @@ const AdminDashboard = () => {
       <div className="row flex-nowrap">
         {/* Sidebar */}
         <nav
-          className={`col-12 col-md-3 col-lg-2 d-md-block bg-white sidebar border-end p-0 ${
-            isSidebarOpen ? 'd-block' : 'd-none d-md-block'
-          }`}
+          className={`col-12 col-md-3 col-lg-2 d-md-block bg-white sidebar border-end p-0 ${isSidebarOpen ? 'd-block' : 'd-none d-md-block'
+            }`}
         >
           <div className="d-flex flex-md-column flex-row flex-nowrap align-items-center align-items-md-start px-3 pt-3 text-dark min-vh-100">
             <span className="fs-4 fw-bold mb-4 d-none d-md-block">Panel Admin</span>

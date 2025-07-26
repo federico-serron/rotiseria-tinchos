@@ -10,7 +10,8 @@ instance/
 .env.*
 backend/.env
 backend/.env.prod
-.pytest_cache
+.pytest_cache.
+backend/app/uploads/
 
 !backend/.env.example
 

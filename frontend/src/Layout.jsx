@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from './views/Home';
 import toast, { Toaster } from 'react-hot-toast';
 import injectContext from './js/store/appContext.jsx';
@@ -15,37 +15,48 @@ import Dashboard from './views/Dashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AdminDashboard from './views/AdminDashboard.jsx';
 import NotFound from './views/NotFound.jsx';
+import ListMenu from './components/ListMenu.jsx';
+import ListUsers from './components/ListUsers.jsx';
 
 
 const Layout = () => {
-    const basename = import.meta.env.VITE_BASENAME || "";
+  const basename = import.meta.env.VITE_BASENAME || "";
   return (
     <div>
 
-        <BrowserRouter>
+      <BrowserRouter>
         <Navbar />
-            <Routes>
-                <Route exact path='/' element={<Home/>} />
-                <Route exact path='/menu' element={<Food/>} />
-                <Route exact path='/about' element={<About/>} />
-                <Route exact path='/contact' element={<Booking/>} />
-                <Route exact path='/login' element={<Login/>} />
-                <Route exact path='/signup' element={<Signup/>} />
-                <Route exact path='/dashboard'element={
-                  <ProtectedRoute requiredRole='user' >
-                     <Dashboard/>
-                  </ProtectedRoute>
-                }/>
-                <Route exact path='/admin'element={
-                  <ProtectedRoute requiredRole='admin' >
-                     <AdminDashboard/>
-                  </ProtectedRoute>
-                }/>
-                <Route path='*' element={<NotFound/>} />
-            </Routes>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/menu' element={<Food />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Booking />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<Signup />} />
+
+          {/* User Panel */}
+          <Route path='/dashboard' element={
+            <ProtectedRoute requiredRole='user' >
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+
+          {/* Admin Panel */}
+          <Route path='/admin' element={
+            <ProtectedRoute requiredRole='admin' >
+              <AdminDashboard />
+            </ProtectedRoute>
+          }>
+            <Route path='menu' element={<ListMenu />} />
+            <Route path='users' element={<ListUsers />} />
+          </Route>
+
+
+          <Route path='*' element={<NotFound />} />
+        </Routes>
         <Footer />
-        </BrowserRouter>
-        <Toaster />
+      </BrowserRouter>
+      <Toaster />
     </div>
   )
 }
