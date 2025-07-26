@@ -8,6 +8,86 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: "",
 			error: "",
 			logged_user: {},
+			users: [
+				{
+					"id": 1,
+					"name": "Juan Pérez",
+					"email": "juan.perez@example.com",
+					"phone": "+598 123456789",
+					"lastLogin": "2025-07-25 14:30",
+					"premium": true
+				},
+				{
+					"id": 2,
+					"name": "Ana Gómez",
+					"email": "ana.gomez@example.com",
+					"phone": "+598 987654321",
+					"lastLogin": "2025-07-24 10:15",
+					"premium": false
+				},
+				{
+					"id": 3,
+					"name": "Carlos López",
+					"email": "carlos.lopez@example.com",
+					"phone": "+598 456789123",
+					"lastLogin": "2025-07-23 18:45",
+					"premium": true
+				},
+				{
+					"id": 4,
+					"name": "María Fernández",
+					"email": "maria.fernandez@example.com",
+					"phone": "+598 654321987",
+					"lastLogin": "2025-07-22 09:00",
+					"premium": false
+				},
+				{
+					"id": 5,
+					"name": "Pedro Sánchez",
+					"email": "pedro.sanchez@example.com",
+					"phone": "+598 321654987",
+					"lastLogin": "2025-07-21 16:20",
+					"premium": true
+				}
+			],
+			menu: [
+				{
+					"id": 1,
+					"image": "https://via.placeholder.com/50",
+					"name": "Pizza Napolitana",
+					"price": 12.99,
+					"description": "Pizza clásica con tomate, mozzarella y albahaca.",
+					"available": true,
+					"category": "Pizzas"
+				},
+				{
+					"id": 2,
+					"image": "https://via.placeholder.com/50",
+					"name": "Hamburguesa Clásica",
+					"price": 8.99,
+					"description": "Hamburguesa con carne de res, lechuga, tomate y queso.",
+					"available": true,
+					"category": "Hamburguesas"
+				},
+				{
+					"id": 3,
+					"image": "https://via.placeholder.com/50",
+					"name": "Ensalada César",
+					"price": 7.5,
+					"description": "Ensalada fresca con pollo, crutones y aderezo César.",
+					"available": false,
+					"category": "Ensaladas"
+				},
+				{
+					"id": 4,
+					"image": "https://via.placeholder.com/50",
+					"name": "Pasta Alfredo",
+					"price": 10.5,
+					"description": "Pasta con salsa Alfredo cremosa y queso parmesano.",
+					"available": true,
+					"category": "Pastas"
+				}
+			],
 		},
 		actions: {
 
