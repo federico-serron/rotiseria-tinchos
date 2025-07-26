@@ -6,17 +6,14 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 const ListMenu = () => {
   const { store, actions } = useContext(Context);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddClick = () => {
     setSelectedItem(null);
-    setIsModalOpen(true);
   };
 
   const handleEditClick = (item) => {
     setSelectedItem(item);
-    setIsModalOpen(true);
   };
 
   const handleDeleteClick = (item) => {
@@ -29,10 +26,24 @@ const ListMenu = () => {
     setIsDeleteModalOpen(false);
   };
 
+  const handleSuccess = () => {
+    setSelectedItem(null);
+    const modalEl = document.getElementById('addMenuItem');
+    const modal = window.bootstrap.Modal.getInstance(modalEl);
+    modal?.hide();
+  };
+
   return (
     <div className="table-responsive pt-2">
-      <div className='pb-2'>
-        <button className="btn btn-primary" onClick={handleAddClick}>➕</button>
+      <div className="pb-2">
+        <button
+          className="btn btn-success"
+          onClick={handleAddClick}
+          data-bs-toggle="modal"
+          data-bs-target="#addMenuItem"
+        >
+          Nuevo +
+        </button>
       </div>
       <table className="table table-striped table-hover">
         <thead className="table-dark">
@@ -64,12 +75,22 @@ const ListMenu = () => {
               <td>{item.available ? 'Sí' : 'No'}</td>
               <td>{item.category}</td>
               <td>
-                <button className="btn btn-warning me-2" onClick={() => handleEditClick(item)}>
-                  <FaEdit />
-                </button>
-                <button className="btn btn-danger" onClick={() => handleDeleteClick(item)}>
-                  <FaTrash />
-                </button>
+                <div className="d-flex align-items-center">
+                  <button
+                    className="btn btn-link text-primary p-0 me-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addMenuItem"
+                    onClick={() => handleEditClick(item)}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="btn btn-link text-danger p-0"
+                    onClick={() => handleDeleteClick(item)}
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -77,19 +98,34 @@ const ListMenu = () => {
       </table>
 
       {/* Add/Edit Modal */}
-      {isModalOpen && (
-        <MenuModal
-          onSave={(formData) => {
-            if (selectedItem) {
-              actions.editMenuItem(selectedItem.id, formData.name, formData.price, formData.description, formData.category_id, formData.image);
-            } else {
-              actions.addMenuItem(formData.name, formData.price, formData.description, formData.category_id, formData.image);
-            }
-            setIsModalOpen(false);
-          }}
-          initialData={selectedItem || {}}
-        />
-      )}
+      <MenuModal
+        id="addMenuItem"
+        message={selectedItem ? 'Editar ítem del menú' : 'Crear nuevo ítem'}
+        onSuccess={handleSuccess}
+        initialData={selectedItem || {}}
+        onConfirm={(formData) => {
+          if (selectedItem) {
+            actions.editMenuItem(
+              selectedItem.id,
+              formData.name,
+              formData.price,
+              formData.description,
+              formData.category_id,
+              formData.image
+            );
+          } else {
+            actions.addMenuItem(
+              formData.name,
+              formData.price,
+              formData.description,
+              formData.category_id,
+              formData.image
+            );
+          }
+          handleSuccess();
+        }}
+        onCancel={()=>setSelectedItem(null)}
+      />
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
@@ -98,14 +134,30 @@ const ListMenu = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Confirmar Eliminación</h5>
-                <button type="button" className="btn-close" onClick={() => setIsDeleteModalOpen(false)}></button>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                ></button>
               </div>
               <div className="modal-body">
                 <p>¿Estás seguro de que deseas eliminar este ítem?</p>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
-                <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Eliminar</button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleDeleteConfirm}
+                >
+                  Eliminar
+                </button>
               </div>
             </div>
           </div>

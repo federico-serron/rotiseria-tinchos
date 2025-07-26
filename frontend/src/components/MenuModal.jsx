@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const MenuModal = ({ onSave, initialData = {} }) => {
+const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, initialData = {}, onCancel }) => {
 
     const [formData, setFormData] = useState({
-        name: initialData.name || '',
-        price: initialData.price || '',
-        description: initialData.description || '',
-        category_id: initialData.category_id || '',
+        name: '',
+        price: '',
+        description: '',
+        category_id: '',
         image: null,
     });
 
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        setFormData({
+            name: initialData.name || '',
+            price: initialData.price || '',
+            description: initialData.description || '',
+            category_id: initialData.category_id || '',
+            image: null,
+        });
+    }, [initialData]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -18,13 +28,12 @@ const MenuModal = ({ onSave, initialData = {} }) => {
             ...formData,
             [name]: files ? files[0] : value,
         });
-        setErrors({ ...errors, [name]: '' }); // Clear error for the field
+        setErrors({ ...errors, [name]: '' });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate required fields
         const requiredFields = ['name', 'description', 'price', 'category_id'];
         const newErrors = {};
 
@@ -39,21 +48,47 @@ const MenuModal = ({ onSave, initialData = {} }) => {
             return;
         }
 
-        onSave(formData);
+        onConfirm(formData);
+        if (onSuccess) onSuccess();
     };
 
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            price: '',
+            description: '',
+            category_id: '',
+            image: null,
+        });
+        setErrors({});
+    };
+
+
     return (
-        <div className="modal fade" id="menuModal" tabIndex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+        <div
+            className="modal fade"
+            id={id}
+            tabIndex="-1"
+            aria-labelledby={`${id}Label`}
+            aria-hidden="true"
+        >
             <div className="modal-dialog">
                 <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="menuModalLabel">
-                            {initialData.id ? 'Editar Ítem' : 'Agregar Nuevo Ítem'}
-                        </h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div className="modal-body">
-                        <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
+                        <div className="modal-header">
+                            <h5 className="modal-title" id={`${id}Label`}>
+                                {message}
+                            </h5>
+                            <button
+                                onClick={() => {resetForm(); if (onCancel) onCancel();}}
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            {/* Los campos del formulario */}
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">Nombre</label>
                                 <input
@@ -63,7 +98,6 @@ const MenuModal = ({ onSave, initialData = {} }) => {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    required
                                 />
                                 {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                             </div>
@@ -76,7 +110,6 @@ const MenuModal = ({ onSave, initialData = {} }) => {
                                     name="price"
                                     value={formData.price}
                                     onChange={handleChange}
-                                    required
                                 />
                                 {errors.price && <div className="invalid-feedback">{errors.price}</div>}
                             </div>
@@ -88,7 +121,6 @@ const MenuModal = ({ onSave, initialData = {} }) => {
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    required
                                 ></textarea>
                                 {errors.description && <div className="invalid-feedback">{errors.description}</div>}
                             </div>
@@ -101,7 +133,6 @@ const MenuModal = ({ onSave, initialData = {} }) => {
                                     name="category_id"
                                     value={formData.category_id}
                                     onChange={handleChange}
-                                    required
                                 />
                                 {errors.category_id && <div className="invalid-feedback">{errors.category_id}</div>}
                             </div>
@@ -115,9 +146,16 @@ const MenuModal = ({ onSave, initialData = {} }) => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            <button type="submit" className="btn btn-primary">{initialData.id ? 'Guardar Cambios' : 'Guardar'}</button>
-                        </form>
-                    </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="submit" className="btn btn-primary">
+                                {initialData.id ? 'Guardar Cambios' : 'Guardar'}
+                            </button>
+                            <button onClick={() => { resetForm(); if (onCancel) onCancel(); }} type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
