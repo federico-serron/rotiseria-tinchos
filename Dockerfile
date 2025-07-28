@@ -1,6 +1,6 @@
 # Setear FLASK_APP para flask db upgrade
 # Etapa 1: Build frontend
-FROM node:20-alpine as frontend-builder
+FROM node:20-slim AS frontend-builder
 WORKDIR /app
 
 COPY frontend/package*.json ./
