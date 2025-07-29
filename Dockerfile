@@ -28,4 +28,5 @@ ENV FLASK_APP=app/run.py
 
 EXPOSE 5200
 
-CMD bash -c "cd backend && flask db upgrade && gunicorn app.run:app --bind 0.0.0.0:5200 --workers 4 --worker-class gevent"
+CMD bash -c "cd backend && flask db upgrade && gunicorn app.run:app --bind 0.0.0.0:5200 --workers 2 --worker-class gevent"
+
