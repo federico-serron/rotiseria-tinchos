@@ -198,7 +198,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					setStore({ ...store, menu: data.menu })
+					setStore({ ...store, menu: data.menu.filter(m => m.is_available) })
 					return true
 
 				} catch (error) {
@@ -273,7 +273,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					setStore({ ...store, message: data.msg, menu: [...store.menu, data.menu_item] })
+					setStore({ ...store, message: data.msg, menu: store.menu.map(m =>
+						m.id === id ? data.menu_item : m 
+					) })
+					//setStore({ ...store, message: data.msg, menu: [...store.menu, data.menu_item] })
+					return true
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+			deleteMenuItem: async (id) => {
+				const URLdeleteMenuItem = `${backendUrl}/menu/${id}`;
+				const store = getStore()
+
+				try {
+					const response = await fetch(URLdeleteMenuItem, {
+						method: "DELETE",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+						},
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, message: data.msg, menu: store.menu.filter(m => m.id != id) })
+
+
 					return true
 
 				} catch (error) {

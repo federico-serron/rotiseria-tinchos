@@ -82,7 +82,7 @@ const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, in
                                 {message}
                             </h5>
                             <button
-                                onClick={() => {resetForm(); if (onCancel) onCancel();}}
+                                onClick={() => { resetForm(); if (onCancel) onCancel(); }}
                                 type="button"
                                 className="btn-close"
                                 data-bs-dismiss="modal"
