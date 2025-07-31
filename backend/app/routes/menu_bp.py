@@ -4,7 +4,7 @@ from app.services.auth_service import is_user_admin
 from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
-menu_bp = Blueprint('menu', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
+menu_bp = Blueprint('api/menu', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
 
 @menu_bp.route('/', methods=['GET'])
 def get_menu():

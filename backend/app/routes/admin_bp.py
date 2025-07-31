@@ -6,7 +6,7 @@ from app import db, bcrypt, jwt
 from datetime import timedelta                                   # importa tiempo especifico para rendimiento de token válido
 from app.services.auth_service import create_user_service
 
-admin_bp = Blueprint('admin', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
+admin_bp = Blueprint('api/admin', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
 
 
 # RUTA TEST de http://127.0.0.1:5000/admin_bp que muestra "Hola mundo":

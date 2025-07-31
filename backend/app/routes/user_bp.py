@@ -6,7 +6,7 @@ from app.services.auth_service import create_user_service, login_user_service, e
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 from app.blacklist import BLACKLIST
 
-user_bp = Blueprint('user', __name__)
+user_bp = Blueprint('api/user', __name__)
 
 @user_bp.route('/signup', methods=['POST'])
 def create_user():

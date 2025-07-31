@@ -29,7 +29,10 @@ def create_app():
     """
     We define static_folder because Flask is going to serve the front end files since we are running everything from a single Dockerfile in production
     """
-    app = Flask(__name__, static_folder="front/build", static_url_path="/")
+    static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'front/build')
+    app = Flask(__name__, static_folder=static_file_dir)
+
+
     
     # Configuración básica
     app.config.from_object(config_class)
@@ -59,11 +62,11 @@ def create_app():
     from app.routes.category_bp import category_bp
     from app.routes.invoice_bp import invoice_bp
     
-    app.register_blueprint(admin_bp, url_prefix='/admin')
-    app.register_blueprint(user_bp, url_prefix='/user')
-    app.register_blueprint(menu_bp, url_prefix='/menu')
-    app.register_blueprint(category_bp, url_prefix='/categories')
-    app.register_blueprint(invoice_bp, url_prefix='/invoices')
+    app.register_blueprint(admin_bp, url_prefix='/api/admin')
+    app.register_blueprint(user_bp, url_prefix='/api/user')
+    app.register_blueprint(menu_bp, url_prefix='/api/menu')
+    app.register_blueprint(category_bp, url_prefix='/api/categories')
+    app.register_blueprint(invoice_bp, url_prefix='/api/invoices')
     
 
     return app
