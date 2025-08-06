@@ -60,7 +60,7 @@ def login_user_service(email, password):
     true_o_false = bcrypt.check_password_hash(password_from_db, password)
         
     if true_o_false:
-        expires = timedelta(days=1)
+        expires = timedelta(minutes=120)
 
         user_id = user.id
         role = user.role

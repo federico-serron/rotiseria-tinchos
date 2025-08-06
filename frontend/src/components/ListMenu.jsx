@@ -150,35 +150,37 @@ const ListMenu = () => {
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Confirmar Eliminación</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setIsDeleteModalOpen(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p>¿Estás seguro de que deseas eliminar este ítem?</p>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setIsDeleteModalOpen(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleDeleteConfirm}
-                >
-                  Eliminar
-                </button>
+        <div className="modal-backdrop-custom">
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog" >
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Confirmar Eliminación</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar este ítem?</p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsDeleteModalOpen(false)}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={handleDeleteConfirm}
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
             </div>
           </div>

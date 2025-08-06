@@ -13,6 +13,7 @@ export function useAuth() {
 
       if (decoded.exp < now) {
         // Token vencido
+        localStorage.removeItem("access_token") 
         return { isAuthenticated: false, role: null, userId: null };
       }
 

@@ -4,7 +4,7 @@ from app.services.auth_service import is_user_admin
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 from app.services.invoice_service import add_invoice_menu_service, get_user_invoices
 
-invoice_bp = Blueprint('invoices', __name__)
+invoice_bp = Blueprint('api/invoices', __name__)
 
 
 @invoice_bp.route('/', methods=['GET'])

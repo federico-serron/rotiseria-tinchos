@@ -4,7 +4,7 @@ from app.services.auth_service import is_user_admin
 from app.services.category_service import get_categories_service, add_category_service, edit_category_service, delete_category_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
-category_bp = Blueprint('categories', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
+category_bp = Blueprint('api/categories', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
 
 
 @category_bp.route('/', methods=['GET'])
