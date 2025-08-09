@@ -219,7 +219,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-							// NO pongas Content-Type acá
 						},
 						body: formData // esto tiene que ir crudo, sin stringify
 					});
@@ -347,45 +346,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			addCategory: async (formData) => {
+			addCategory: async (categoryData) => {
 				const URLaddCategory = `${backendUrl}/categories/`;
 				const store = getStore();
-
 				try {
 					const response = await fetch(URLaddCategory, {
 						method: "POST",
 						headers: {
 							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-							// NO pongas Content-Type acá
+							"Content-Type": "application/json",
 						},
-						body: formData // esto tiene que ir crudo, sin stringify
+						body: JSON.stringify(categoryData)
 					});
-
+					
 					const data = await response.json();
-
+					
 					if (!response.ok) {
 						throw new Error(data.error || "Error desconocido");
-					}
-
-					if (!data.menu_item) {
-						throw new Error("Faltan datos del menú");
 					}
 
 					setStore({
 						...store,
 						message: data.msg,
-						menu: [...store.menu, data.menu_item]
+						categories: [...store.categories, data.category]
 					});
-
+					
 					return true;
 
 				} catch (error) {
 					setStore({ ...store, error: error.message });
-					console.error("Error al agregar ítem del menú:", error.message);
+					console.log("error: ", error)
 					return false;
 				}
 			},
-
+			
 		}
 	};
 };
