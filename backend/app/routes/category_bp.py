@@ -30,7 +30,7 @@ def add_category():
     try:
         user_admin = is_user_admin(user_id)
         
-        if not data.get('name')  or not data.get('note'):
+        if not data.get('name') or not data.get('note'):
             raise BadRequestError("Nombre y Nota son necesarios")
         
         new_category = add_category_service(**data)

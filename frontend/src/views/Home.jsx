@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { Context } from '../js/store/appContext.jsx';
-import Hero from '../components/Hero.jsx';
-import Offers from '../components/Offers.jsx';
-import Food from '../components/Food.jsx';
-import About from '../components/About.jsx';
-import Booking from '../components/Booking.jsx';
+import Hero from '../components/home/Hero.jsx';
+import Offers from '../components/home/Offers.jsx';
+import Food from '../components/home/Food.jsx';
+import About from '../components/home/About.jsx';
+import Booking from '../components/home/Booking.jsx';
 
 function Home() {
   const { store, actions } = useContext(Context);

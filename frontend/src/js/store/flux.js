@@ -51,6 +51,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			],
 			menu: [],
+			categories: [],
 		},
 		actions: {
 
@@ -218,7 +219,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						headers: {
 							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-							// NO pongas Content-Type acá
 						},
 						body: formData // esto tiene que ir crudo, sin stringify
 					});
@@ -318,6 +318,68 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
+			getCategories: async () => {
+				const URLgetCategories = `${backendUrl}/categories/`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(URLgetCategories, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, categories: data.categories })
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+			addCategory: async (categoryData) => {
+				const URLaddCategory = `${backendUrl}/categories/`;
+				const store = getStore();
+				try {
+					const response = await fetch(URLaddCategory, {
+						method: "POST",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(categoryData)
+					});
+					
+					const data = await response.json();
+					
+					if (!response.ok) {
+						throw new Error(data.error || "Error desconocido");
+					}
+
+					setStore({
+						...store,
+						message: data.msg,
+						categories: [...store.categories, data.category]
+					});
+					
+					return true;
+
+				} catch (error) {
+					setStore({ ...store, error: error.message });
+					console.log("error: ", error)
+					return false;
+				}
+			},
+			
 		}
 	};
 };
