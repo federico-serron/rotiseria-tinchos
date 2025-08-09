@@ -58,6 +58,35 @@ const AdminCategories = () => {
         setIsDeleteModalOpen(false);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const jsonData = {
+            name: formData.name,
+            note: formData.note
+        };
+
+        if (selectedCategory) {
+            const resp = await actions.editCategory(selectedCategory.id, jsonData);
+            if (!resp) {
+                toast.error(store.error)
+                return
+            } else {
+                toast.success(store.message)
+            }
+        } else {
+            const resp = await actions.addCategory(jsonData);
+            if (!resp) {
+                toast.error(store.error)
+                return
+            } else {
+                toast.success(store.message)
+            }
+        }
+
+        handleSuccess();
+    }
+
     useEffect(() => {
         const fetchCategories = async () => {
             const resp = await actions.getCategories();
@@ -141,19 +170,7 @@ const AdminCategories = () => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                const jsonData = {
-                                    name: formData.name,
-                                    note: formData.note
-                                };
-                                if (selectedCategory) {
-                                    actions.editCategory(selectedCategory.id, jsonData);
-                                } else {
-                                    actions.addCategory(jsonData);
-                                }
-                                handleSuccess();
-                            }}
+                            onSubmit={(e) => handleSubmit(e)}
                         >
                             <div className="modal-header">
                                 <h5 className="modal-title" id="addCategoryModalLabel">
