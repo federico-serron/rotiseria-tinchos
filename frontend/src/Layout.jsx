@@ -13,10 +13,11 @@ import Login from './views/Login.jsx';
 import Signup from './views/Singup.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import AdminDashboard from './views/AdminDashboard.jsx';
+import AdminDashboard from './views/admin/AdminDashboard.jsx';
 import NotFound from './views/NotFound.jsx';
 import ListMenu from './components/ListMenu.jsx';
 import ListUsers from './components/ListUsers.jsx';
+import AdminCategories from './components/admin/AdminCategories.jsx';
 
 
 const Layout = () => {
@@ -49,6 +50,7 @@ const Layout = () => {
           }>
             <Route path='menu' element={<ListMenu />} />
             <Route path='users' element={<ListUsers />} />
+            <Route path='categorias' element={<AdminCategories />} />
           </Route>
 
 

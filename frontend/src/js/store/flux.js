@@ -51,6 +51,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			],
 			menu: [],
+			categories: [],
 		},
 		actions: {
 
@@ -318,6 +319,73 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
+			getCategories: async () => {
+				const URLgetCategories = `${backendUrl}/categories/`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(URLgetCategories, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, categories: data.categories })
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+			addCategory: async (formData) => {
+				const URLaddCategory = `${backendUrl}/categories/`;
+				const store = getStore();
+
+				try {
+					const response = await fetch(URLaddCategory, {
+						method: "POST",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							// NO pongas Content-Type acá
+						},
+						body: formData // esto tiene que ir crudo, sin stringify
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						throw new Error(data.error || "Error desconocido");
+					}
+
+					if (!data.menu_item) {
+						throw new Error("Faltan datos del menú");
+					}
+
+					setStore({
+						...store,
+						message: data.msg,
+						menu: [...store.menu, data.menu_item]
+					});
+
+					return true;
+
+				} catch (error) {
+					setStore({ ...store, error: error.message });
+					console.error("Error al agregar ítem del menú:", error.message);
+					return false;
+				}
+			},
+
 		}
 	};
 };
