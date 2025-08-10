@@ -349,6 +349,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			addCategory: async (categoryData) => {
 				const URLaddCategory = `${backendUrl}/categories/`;
 				const store = getStore();
+
+				if (!categoryData.name || !categoryData.note) {
+					throw new Error("Todos los campos son obligatorios");
+				}
+
 				try {
 					const response = await fetch(URLaddCategory, {
 						method: "POST",
@@ -380,6 +385,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			
+			editCategory: async (id, categoryData) => {
+				const URLeditCategory = `${backendUrl}/categories/${id}`;
+				const store = getStore()
+
+				try {
+					
+					const response = await fetch(URLeditCategory, {
+						method: "PUT",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(categoryData)
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+					if (!data.category) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, message: data.msg, categories: store.categories.map(c =>
+						c.id === id ? data.category : c 
+					) })
+					return true
+					
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.log("soy el error")
+					console.error(store.error)
+					return false
+				}
+
+			},
 		}
 	};
 };
