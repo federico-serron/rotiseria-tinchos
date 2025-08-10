@@ -53,9 +53,16 @@ const AdminCategories = () => {
         });
     };
 
-    const handleDeleteConfirm = () => {
-        actions.deleteCategory(selectedCategory.id);
+    const handleDeleteConfirm = async () => {
+
+        const resp = await actions.deleteCategory(selectedCategory.id);
+        if (!resp) {
+            toast.error(store.error)
+            return;
+        }
+        toast.success(store.message)
         setIsDeleteModalOpen(false);
+        return
     };
 
     const handleSubmit = async (e) => {

@@ -422,6 +422,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
+			deleteCategory: async (id) => {
+				const URLdeleteCategory = `${backendUrl}/categories/${id}`;
+				const store = getStore()
+
+				try {
+					const response = await fetch(URLdeleteCategory, {
+						method: "DELETE",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+						},
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, message: data.msg, categories: store.categories.filter(c => c.id != id) })
+
+
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
 		}
 	};
 };
