@@ -55,6 +55,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 
+			///////////////////////////////////////////////// AUTHENTICATION /////////////////////////////////////////////////////////////////
 			signup: async (name, email, password, phone, address) => {
 				const URLsignup = `${backendUrl}/user/signup`;
 				const store = getStore()
@@ -183,6 +184,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			///////////////////////////////////////////////// MENU /////////////////////////////////////////////////////////////////
 			getMenuItems: async () => {
 				const URLgetMenuItems = `${backendUrl}/menu/`;
 				const store = getStore()
@@ -273,9 +275,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					setStore({ ...store, message: data.msg, menu: store.menu.map(m =>
-						m.id === id ? data.menu_item : m 
-					) })
+					setStore({
+						...store, message: data.msg, menu: store.menu.map(m =>
+							m.id === id ? data.menu_item : m
+						)
+					})
 					//setStore({ ...store, message: data.msg, menu: [...store.menu, data.menu_item] })
 					return true
 					return true
@@ -319,6 +323,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
+			///////////////////////////////////////////////// CATEGORIES /////////////////////////////////////////////////////////////////
 			getCategories: async () => {
 				const URLgetCategories = `${backendUrl}/categories/`;
 				const store = getStore()
@@ -363,9 +368,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(categoryData)
 					});
-					
+
 					const data = await response.json();
-					
+
 					if (!response.ok) {
 						throw new Error(data.error || "Error desconocido");
 					}
@@ -375,7 +380,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						message: data.msg,
 						categories: [...store.categories, data.category]
 					});
-					
+
 					return true;
 
 				} catch (error) {
@@ -384,13 +389,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-			
+
 			editCategory: async (id, categoryData) => {
 				const URLeditCategory = `${backendUrl}/categories/${id}`;
 				const store = getStore()
 
 				try {
-					
+
 					const response = await fetch(URLeditCategory, {
 						method: "PUT",
 						headers: {
@@ -409,11 +414,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					setStore({ ...store, message: data.msg, categories: store.categories.map(c =>
-						c.id === id ? data.category : c 
-					) })
+					setStore({
+						...store, message: data.msg, categories: store.categories.map(c =>
+							c.id === id ? data.category : c
+						)
+					})
 					return true
-					
+
 				} catch (error) {
 					setStore({ ...store, error: error.message })
 					console.log("soy el error")
@@ -453,6 +460,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
+			///////////////////////////////////////////////// INVOINCES /////////////////////////////////////////////////////////////////
 		}
 	};
 };

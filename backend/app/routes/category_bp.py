@@ -8,6 +8,7 @@ category_bp = Blueprint('api/categories', __name__)     # instanciar admin_bp de
 
 
 @category_bp.route('/', methods=['GET'])
+@jwt_required(locations=["cookies"])
 def get_categories():
     try:
         categories_list = get_categories_service()
@@ -21,7 +22,7 @@ def get_categories():
     
 
 @category_bp.route('/', methods=['POST'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def add_category():
     
     data = request.get_json()
@@ -41,13 +42,16 @@ def add_category():
     
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
-        
+
+    except UnauthorizedError as e:
+        return jsonify({'error': str(e)}), 403
+            
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
     
     
 @category_bp.route('/<int:id>', methods=['PUT'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def edit_category(id):
     
     data = request.get_json()
@@ -67,13 +71,16 @@ def edit_category(id):
     
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
+    
+    except UnauthorizedError as e:
+        return jsonify({'error': str(e)}), 403
         
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
     
     
 @category_bp.route('/<int:id>', methods=['DELETE'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def delete_category(id):
     
     user_id = get_jwt_identity() 
@@ -90,6 +97,9 @@ def delete_category(id):
     
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
+    
+    except UnauthorizedError as e:
+        return jsonify({'error': str(e)}), 403
         
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500

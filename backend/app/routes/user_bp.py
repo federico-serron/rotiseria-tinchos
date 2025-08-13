@@ -54,7 +54,7 @@ def login():
     
     
 @user_bp.route('/edit', methods=['PUT'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def edit_user():
     
     user_id = get_jwt_identity()
@@ -76,7 +76,7 @@ def edit_user():
     
     
 @user_bp.route('/users')
-@jwt_required()  
+@jwt_required(locations=["cookies"])  
 def show_users():
     current_user_id = get_jwt_identity()  # Obtiene la id del usuario del token
     if current_user_id:
@@ -90,7 +90,7 @@ def show_users():
     
     
 @user_bp.route("/logout", methods=["POST"])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def logout():
     
     try:
