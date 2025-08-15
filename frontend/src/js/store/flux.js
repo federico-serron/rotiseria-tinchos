@@ -190,10 +190,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					const response = await fetch(URLAddMenuItem, {
 						method: "POST",
-						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-						},
-						body: formData // esto tiene que ir crudo, sin stringify
+
+						credentials: "include",
+						body: formData
 					});
 
 					const data = await response.json();
@@ -231,9 +230,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(URLeditMenuItem, {
 						method: "PUT",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
 							"Content-Type": "application/json"
 						},
+						credentials: "include",
 						body: JSON.stringify(jsonData)
 					})
 
@@ -251,8 +250,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							m.id === id ? data.menu_item : m
 						)
 					})
-					//setStore({ ...store, message: data.msg, menu: [...store.menu, data.menu_item] })
-					return true
+
 					return true
 
 				} catch (error) {
@@ -271,8 +269,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(URLdeleteMenuItem, {
 						method: "DELETE",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							"Content-type": "application/json"
 						},
+						credentials: "include"
 					})
 
 					const data = await response.json()
@@ -334,9 +333,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(URLaddCategory, {
 						method: "POST",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
 							"Content-Type": "application/json",
 						},
+						credentials: "include",
 						body: JSON.stringify(categoryData)
 					});
 
@@ -356,7 +355,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				} catch (error) {
 					setStore({ ...store, error: error.message });
-					console.log("error: ", error)
 					return false;
 				}
 			},
@@ -370,9 +368,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(URLeditCategory, {
 						method: "PUT",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
 							"Content-Type": "application/json"
 						},
+						credentials: "include",
 						body: JSON.stringify(categoryData)
 					})
 
@@ -394,7 +392,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				} catch (error) {
 					setStore({ ...store, error: error.message })
-					console.log("soy el error")
 					console.error(store.error)
 					return false
 				}
@@ -409,8 +406,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(URLdeleteCategory, {
 						method: "DELETE",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+							"Content-type": "application/json"
 						},
+						credentials: "include"
 					})
 
 					const data = await response.json()

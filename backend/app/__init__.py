@@ -56,14 +56,12 @@ def create_app():
         os.makedirs(os.path.dirname(db_path))
 
     # Registrar blueprints
-    from app.routes.admin_bp import admin_bp
     from app.routes.user_bp import user_bp
     from app.routes.menu_bp import menu_bp
     from app.routes.category_bp import category_bp
     from app.routes.invoice_bp import invoice_bp
     from app.routes.auth_bp import auth_bp
     
-    app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(user_bp, url_prefix='/api/user')
     app.register_blueprint(menu_bp, url_prefix='/api/menu')
     app.register_blueprint(category_bp, url_prefix='/api/categories')

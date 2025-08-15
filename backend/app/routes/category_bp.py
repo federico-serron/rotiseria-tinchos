@@ -8,7 +8,6 @@ category_bp = Blueprint('api/categories', __name__)     # instanciar admin_bp de
 
 
 @category_bp.route('/', methods=['GET'])
-@jwt_required(locations=["cookies"])
 def get_categories():
     try:
         categories_list = get_categories_service()

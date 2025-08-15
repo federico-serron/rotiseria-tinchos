@@ -22,6 +22,24 @@ def me():
     }), 200
     
     
+@auth_bp.route('/signup', methods=['POST'])
+def create_user():
+    try:
+    
+        data = request.get_json()
+        new_user = create_user_service(**data)
+        return jsonify({'msg': 'Usuario creado exitosamente!','user':new_user}), 201
+    
+    except ConflictError as e:
+        return jsonify({'error': str(e)}), 400
+    
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
+    
+    except Exception as e:
+        return jsonify({'error': 'Error al crear usuario: ' + str(e)}), 500
+
+    
 @auth_bp.route('/login', methods=['POST'])
 def login():
     try:
@@ -49,8 +67,49 @@ def login():
     except Exception as e:
         return {"error":"Error al intentar iniciar sesion: " + str(e)}, 500
     
+
+@auth_bp.route('/edit', methods=['PUT'])
+@jwt_required(locations=["cookies"])
+def edit_user():
+    
+    user_id = get_jwt_identity()
+    
+    try:
+        data = request.get_json()
+        
+        edited_user = edit_user_service(user_id, **data)
+        return jsonify({"msg": "Usuario editado correcamente", "user": edited_user}), 200
+
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
+
+    except NotFoundError as e:
+        return jsonify({'error': str(e)}), 404
+
+    except Exception as e:
+        return {"error":"Error al intentar actualizar tus datos: " + str(e)}, 500
+    
+    
+@auth_bp.route('/users')
+@jwt_required(locations=["cookies"])  
+def show_users():
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        users = User.query.all()
+        user_list = []
+        for user in users:
+            user_list.append(user.serialize())
+        return jsonify(user_list), 200
+    else:
+        return jsonify({"error": "Token inválido o no proporcionado"}), 401
+    
+    
 @auth_bp.post("/logout")
+@jwt_required(locations=["cookies"])
 def logout():
-    resp = jsonify({"msg": "Sesión cerrada"})
-    unset_jwt_cookies(resp)
-    return resp, 200
+    try:
+        resp = jsonify({"msg": "Sesión cerrada"})
+        unset_jwt_cookies(resp)
+        return resp, 200
+    except Exception as e:
+        return jsonify({"error":"Error, no pudimos desloguearte, intenta neuvamente mas tarde"}), 500

@@ -13,7 +13,7 @@ export function useAuth() {
       setLoading(false);
     };
     fetchUser();
-  }, [store.user_loaded, actions]);
+  }, [store.user_loaded]);
 
   const auth = useMemo(() => {
     if (loading) return { isAuthenticated: false, role: null, userId: null, loading: true };
