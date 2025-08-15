@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from './views/Home';
 import toast, { Toaster } from 'react-hot-toast';
+import { Context } from "./js/store/appContext";
 import injectContext from './js/store/appContext.jsx';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Footer from './components/Footer.jsx';
@@ -21,7 +22,17 @@ import AdminCategories from './components/admin/AdminCategories.jsx';
 
 
 const Layout = () => {
+  const { actions } = useContext(Context);
+  
   const basename = import.meta.env.VITE_BASENAME || "";
+
+  useEffect(() => {
+    const fetchCurrentUser = async ()=>{
+      await actions.getCurrentUser();
+    }
+    fetchCurrentUser();
+  }, []);
+  
   return (
     <div>
 

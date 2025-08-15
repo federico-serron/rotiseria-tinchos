@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: "",
 			error: "",
 			logged_user: {},
+			user_loaded: false,
 			users: [],
 			menu: [],
 			categories: [],
@@ -57,31 +58,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false
 				}
 
-			}, 
-			
-			getCurrentUser: async () => {
-				const URL = `${backendUrl}/auth/me`;
-				const store = getStore()
+			},
+
+			getCurrentUser: async (force = false) => {
+				const store = getStore();
+				// If already loaded and not forcing, skip fetch
+				if (store.user_loaded && !force) return;
 
 				try {
-					const resp = await fetch(URL, { credentials: "include" });
-					if (!resp.ok) throw new Error("No autenticado");
+					const resp = await fetch(`${backendUrl}/auth/me`, {
+						method: "GET",
+						headers: { "Content-type": "application/json; charset=UTF-8" },
+						credentials: "include"
+					});
+					if (!resp.ok) throw new Error(resp.statusText);
 					const data = await resp.json();
-					setStore({...store, logged_user: data });
-				} catch {
-					setStore({...store, logged_user: {} });
+					setStore({ ...store, logged_user: data, user_loaded: true });
+					return data;
+				} catch (error) {
+					console.log(error.message);
+					setStore({ ...store, logged_user: {}, user_loaded: true });
+					return null;
 				}
 			},
 
 
 			login: async (email, password) => {
-				const URLlogin = `${backendUrl}/user/login`;
+				const URLlogin = `${backendUrl}/auth/login`;
 				const store = getStore()
 
 				if (!email || !password) {
 					setStore({ ...store, error: "Completa todos los campos." })
 					return false;
-
 				}
 
 				try {
@@ -94,8 +102,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: "POST",
 						body: JSON.stringify(userData),
 						headers: {
-							"Content-type": "application/json; charset=UTF-8"
-						}
+							"Content-type": "application/json"
+						},
+						credentials: "include"
 					})
 
 					const data = await response.json()
@@ -103,13 +112,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (!response.ok) {
 						throw new Error(data.error);
 					}
-					if (!data.access_token) {
-						throw new Error(data.error);
-					}
-
-					localStorage.setItem("access_token", data.access_token)
 
 					setStore({ ...store, message: data.msg })
+					await getActions().getCurrentUser()
 					return true
 
 				} catch (error) {
@@ -121,23 +126,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			logout: async () => {
-				const URLlogout = `${backendUrl}/user/logout`;
+				const URLlogout = `${backendUrl}/auth/logout`;
 				const store = getStore();
-				const token = localStorage.getItem("access_token")
-
-				if (!token) {
-					setStore({ ...store, error: "Debes loguearte antes de desloguearte!" })
-					return false
-				}
 
 				try {
 
 					const response = await fetch(URLlogout, {
 						method: "POST",
 						headers: {
-							"Authorization": `Bearer ${localStorage.getItem('access_token')}`,
-							"Content-type": "application/json; charset=UTF-8"
-						}
+							"Content-type": "application/json"
+						},
+						credentials: "include"
 					})
 
 					const data = await response.json()
@@ -146,8 +145,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(data.error);
 					}
 
-					localStorage.removeItem("access_token")
-					setStore({ ...store, logged_user: {} })
+					setStore({ ...store, logged_user: {}, user_loaded: true })
 
 					return true;
 

@@ -48,13 +48,13 @@ const Login = () => {
             const resp = await actions.login(form.email, form.password)
             if (resp) {
                 toast.success(store.message)
-                const token = localStorage.getItem("access_token")
-                const decoded = jwtDecode(token)
-
-                if (decoded.role == 'admin') {
-                    navigate('/admin')
+                // after login, force refresh current user so store and components (Navbar) update immediately
+                const user = await actions.getCurrentUser(true);
+                const role = user?.role || store.logged_user?.role;
+                if (role === 'admin') {
+                    navigate('/admin');
                 } else {
-                    navigate('/dashboard')
+                    navigate('/dashboard');
                 }
             }
             else {
@@ -65,18 +65,18 @@ const Login = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem("access_token")
-        if (token) {
-            const decoded = jwtDecode(token)
+        // Only redirect if user info has been loaded and we actually have a logged user
+        if (!store.user_loaded) return;
 
-            if (decoded.role == 'admin') {
-                navigate('/admin')
-            } else {
-                navigate('/dashboard')
-            }
+        const hasUser = store.logged_user && Object.keys(store.logged_user).length > 0;
+        if (!hasUser) return; // not authenticated, don't redirect
+
+        if (store.logged_user.role === 'admin') {
+            navigate('/admin');
+        } else {
+            navigate('/dashboard');
         }
-
-    }, []);
+    }, [store.user_loaded, store.logged_user, navigate]);
 
     return (
         <div className="d-flex justify-content-center py-4 align-items-center min-vh-100">
