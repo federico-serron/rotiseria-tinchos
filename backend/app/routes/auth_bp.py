@@ -1,20 +1,29 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
+from flask import Blueprint, request, jsonify, current_app
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt, unset_jwt_cookies, set_access_cookies
 from app.models import User
 from app import bcrypt
 from app.services.auth_service import create_user_service, login_user_service, edit_user_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 from app.blacklist import BLACKLIST
 
-user_bp = Blueprint('api/user', __name__)
+auth_bp = Blueprint('api/auth', __name__)
 
-@user_bp.route('/signup', methods=['POST'])
+
+@auth_bp.route('/me', methods=['GET'])
+@jwt_required(locations=["cookies"])
+def me():
+    user_id = get_jwt_identity()
+    claims = get_jwt()
+    
+    return jsonify({
+        "authenticated": True,
+        "user_id": user_id,
+        "role": claims.get("role")
+    }), 200
+    
+    
+@auth_bp.route('/signup', methods=['POST'])
 def create_user():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    name = request.json.get('name')
-    phone = request.json.get('phone')
-    address = request.json.get('address')
     try:
     
         data = request.get_json()
@@ -30,15 +39,21 @@ def create_user():
     except Exception as e:
         return jsonify({'error': 'Error al crear usuario: ' + str(e)}), 500
 
-
-@user_bp.route('/login', methods=['POST'])
+    
+@auth_bp.route('/login', methods=['POST'])
 def login():
     try:
         email = request.json.get('email')
         password = request.json.get('password')
         
         login_successfull_token = login_user_service(email, password)
-        return jsonify({"msg": "Has iniciado sesion exitosamente!", "access_token": login_successfull_token}), 200
+        resp = jsonify({"msg": "Has iniciado sesion exitosamente!", "access_token": login_successfull_token})
+        
+        is_production = current_app.config["ENV"] == "production"
+
+        set_access_cookies(resp, login_successfull_token)
+        
+        return resp, 200
 
     except BadRequestError as e:
         return jsonify({'error': str(e)}), 400
@@ -52,8 +67,8 @@ def login():
     except Exception as e:
         return {"error":"Error al intentar iniciar sesion: " + str(e)}, 500
     
-    
-@user_bp.route('/edit', methods=['PUT'])
+
+@auth_bp.route('/edit', methods=['PUT'])
 @jwt_required(locations=["cookies"])
 def edit_user():
     
@@ -75,10 +90,10 @@ def edit_user():
         return {"error":"Error al intentar actualizar tus datos: " + str(e)}, 500
     
     
-@user_bp.route('/users')
+@auth_bp.route('/users')
 @jwt_required(locations=["cookies"])  
 def show_users():
-    current_user_id = get_jwt_identity()  # Obtiene la id del usuario del token
+    current_user_id = get_jwt_identity()
     if current_user_id:
         users = User.query.all()
         user_list = []
@@ -86,17 +101,15 @@ def show_users():
             user_list.append(user.serialize())
         return jsonify(user_list), 200
     else:
-        return {"error": "Token inválido o no proporcionado"}, 401
+        return jsonify({"error": "Token inválido o no proporcionado"}), 401
     
     
-@user_bp.route("/logout", methods=["POST"])
+@auth_bp.post("/logout")
 @jwt_required(locations=["cookies"])
 def logout():
-    
     try:
-        jti = get_jwt()["jti"]
-        BLACKLIST.add(jti)
-        return jsonify({"msg": "Sesion terminada"}), 200
-        
+        resp = jsonify({"msg": "Sesión cerrada"})
+        unset_jwt_cookies(resp)
+        return resp, 200
     except Exception as e:
-        return jsonify({"error": "Por alguna razon no pudimos temrinar tu sesion!"}), 500
+        return jsonify({"error":"Error, no pudimos desloguearte, intenta neuvamente mas tarde"}), 500

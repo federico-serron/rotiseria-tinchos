@@ -46,7 +46,7 @@ def create_user_service(**kwargs):
     
     return new_user.serialize()
 
-
+"""
 def login_user_service(email, password):
     
     if not email or not password:
@@ -69,6 +69,30 @@ def login_user_service(email, password):
         return access_token
     else:
         raise ConflictError("Usuario y/o contrasena incorrectos")
+"""
+def login_user_service(email, password):
+    
+    if not email or not password:
+        raise BadRequestError("Email y Contrasena son obligatorios")
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        raise NotFoundError(f"No se encontro un usuario con el email {email}")
+
+    password_from_db = user.password
+    true_o_false = bcrypt.check_password_hash(password_from_db, password)
+        
+    if true_o_false:
+        expires = timedelta(minutes=120)
+
+        user_id = user.id
+        role = user.role
+        access_token = create_access_token(identity=str(user_id), expires_delta=expires, additional_claims={"role": role})
+        
+        return access_token
+    else:
+        raise ConflictError("Usuario y/o contrasena incorrectos")
+    
     
 def edit_user_service(user_id, **kwargs):
     

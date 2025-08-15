@@ -20,7 +20,7 @@ def get_menu():
 
 
 @menu_bp.route('/', methods=['POST'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def add_menu_item():
     name = request.form.get('name')
     description = request.form.get('description')
@@ -37,7 +37,6 @@ def add_menu_item():
     try:
         user_admin = is_user_admin(user_id)
         
-        price = int(price)
         new_menu_item = add_menu_item_service(name, description, price, category_id, image)
         return jsonify({'msg': 'Menu creado satisfactoriamente','menu_item':new_menu_item}), 201
     
@@ -59,7 +58,7 @@ def add_menu_item():
       
 
 @menu_bp.route('/<int:id>', methods=['PUT'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def edit_menu_item(id):
     data = request.get_json()
     user_id = get_jwt_identity()
@@ -87,7 +86,7 @@ def edit_menu_item(id):
     
     
 @menu_bp.route('/<int:id>', methods=['DELETE'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def delete_menu_item(id):
     user_id = get_jwt_identity()
     

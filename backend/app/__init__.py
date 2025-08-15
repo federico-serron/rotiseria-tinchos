@@ -44,7 +44,7 @@ def create_app():
     app.config['UPLOAD_FOLDER'] = upload_folder_path
 
     # Extensiones
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, origins=app.config["CORS_ORIGINS"], supports_credentials=True)
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
@@ -56,17 +56,17 @@ def create_app():
         os.makedirs(os.path.dirname(db_path))
 
     # Registrar blueprints
-    from app.routes.admin_bp import admin_bp
     from app.routes.user_bp import user_bp
     from app.routes.menu_bp import menu_bp
     from app.routes.category_bp import category_bp
     from app.routes.invoice_bp import invoice_bp
+    from app.routes.auth_bp import auth_bp
     
-    app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(user_bp, url_prefix='/api/user')
     app.register_blueprint(menu_bp, url_prefix='/api/menu')
     app.register_blueprint(category_bp, url_prefix='/api/categories')
     app.register_blueprint(invoice_bp, url_prefix='/api/invoices')
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
     
 
     return app

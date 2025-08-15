@@ -9,8 +9,14 @@ const ListMenu = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleAddClick = () => {
+  const handleAddClick = async () => {
     setSelectedItem(null);
+    const resp = await actions.getCategories();
+
+    if(!resp){
+      toast.error(store.error)
+      return
+    }
   };
 
   const handleEditClick = (item) => {
@@ -103,7 +109,7 @@ const ListMenu = () => {
               <td>{item.price}</td>
               <td>{item.description}</td>
               <td className={item.is_available ? 'bold text-success' : 'text-danger'}>{item.is_available ? 'Sí' : 'No'}</td>
-              <td>{item.category}</td>
+              <td>{item.category_name}</td>
               <td>
                 <div className="d-flex align-items-center">
                   <button
@@ -146,6 +152,7 @@ const ListMenu = () => {
 
         }}
         onCancel={() => setSelectedItem(null)}
+        initialCategories={store.categories}
       />
 
       {/* Delete Confirmation Modal */}

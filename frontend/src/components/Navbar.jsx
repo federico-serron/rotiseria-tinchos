@@ -8,8 +8,8 @@ import { Context } from '../js/store/appContext';
 
 const Navbar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const {isAuthenticated} = useAuth();
   const { store, actions } = useContext(Context);
+  const {isAuthenticated} = useAuth();
   const navigate = useNavigate();
 
   const toggleNavbar = () => {

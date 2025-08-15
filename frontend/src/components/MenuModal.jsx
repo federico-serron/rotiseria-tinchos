@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Context } from '../js/store/appContext';
 
 
-const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, initialData = {}, onCancel }) => {
+const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, initialData = {}, onCancel, initialCategories }) => {
 
     const [formData, setFormData] = useState({
         name: '',
@@ -24,12 +24,14 @@ const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, in
         });
     }, [initialData]);
 
+
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
             [name]: files ? files[0] : value,
         });
+        console.log(formData)
         setErrors({ ...errors, [name]: '' });
     };
 
@@ -128,16 +130,25 @@ const MenuModal = ({ id = 'editCategoryModal', message, onSuccess, onConfirm, in
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="category_id" className="form-label">Categoría</label>
-                                <input
-                                    type="text"
+                                <select
                                     className={`form-control ${errors.category_id ? 'is-invalid' : ''}`}
                                     id="category_id"
                                     name="category_id"
                                     value={formData.category_id}
                                     onChange={handleChange}
-                                />
-                                {errors.category_id && <div className="invalid-feedback">{errors.category_id}</div>}
+                                >
+                                    <option value="" disabled>Selecciona una categoría</option>
+                                    {initialCategories.length > 0 &&
+                                        initialCategories.map((category, index) => (
+                                            <option key={index} value={category.id}>{category.name}</option>
+
+                                        ))}
+                                </select>
+                                {errors.category_id && (
+                                    <div className="invalid-feedback">{errors.category_id}</div>
+                                )}
                             </div>
+
                             <div className="mb-3">
                                 <label htmlFor="image" className="form-label">Imagen</label>
                                 <input

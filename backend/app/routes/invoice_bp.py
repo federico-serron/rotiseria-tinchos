@@ -8,7 +8,7 @@ invoice_bp = Blueprint('api/invoices', __name__)
 
 
 @invoice_bp.route('/', methods=['GET'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def get_invoices():
     user_id = get_jwt_identity()
     try:
@@ -24,7 +24,7 @@ def get_invoices():
 
 
 @invoice_bp.route('/', methods=['POST'])
-@jwt_required()
+@jwt_required(locations=["cookies"])
 def add_invoice_menu():
     
     user_id = get_jwt_identity()
