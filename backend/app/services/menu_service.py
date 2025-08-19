@@ -7,7 +7,7 @@ from app.utils import allowed_file
 import os
 
 
-def get_menu_service():
+def     get_menu_service(page, per_page):
     """
     Retrieves the menu items from the database.
     
@@ -17,12 +17,12 @@ def get_menu_service():
     Raises:
         NotFoundError: If no menu items are found.
     """
-    menu_items = Menu.query.all()
-    
-    if not menu_items:
+    query = db.paginate(Menu.query, page=page, per_page=per_page, error_out=False)
+     
+    if not query.items:
         raise NotFoundError("No hay menus disponibles aun.")
     
-    return [item.serialize() for item in menu_items] 
+    return query
 
 
 def add_menu_item_service(name, description, price, category_id, image):

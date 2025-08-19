@@ -8,9 +8,22 @@ menu_bp = Blueprint('api/menu', __name__)     # instanciar admin_bp desde clase 
 
 @menu_bp.route('/', methods=['GET'])
 def get_menu():
+    
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    
     try:
-        menu_list = get_menu_service()
-        return jsonify({'menu': menu_list}), 200
+        query_result = get_menu_service(page=page, per_page=per_page)
+        
+        return jsonify({'menu': [item.serialize() for item in query_result.items],
+                        "page": query_result.page,
+                        "per_page": query_result.per_page,
+                        "pages": query_result.pages,
+                        "has_next": query_result.has_next,
+                        "has_prev": query_result.has_prev,
+                        "next_num": query_result.next_num,
+                        "prev_num": query_result.prev_num
+                        }), 200
 
     except NotFoundError as e:
         return jsonify({'error': str(e)}), 404
