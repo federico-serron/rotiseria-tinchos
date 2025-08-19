@@ -1,17 +1,21 @@
 import React, { useState, useContext } from "react";
 import { FaUser, FaSearch, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/images/logoSvg.png";
 import { useAuth } from "../hooks/useAuth";
 import { Context } from '../js/store/appContext';
 
 
 const Navbar = () => {
+  const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { store, actions } = useContext(Context);
   const {isAuthenticated} = useAuth();
   const navigate = useNavigate();
 
+  const linksNavbar = {
+    name: "Inicio", path: 
+  }
   const toggleNavbar = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -31,6 +35,7 @@ const Navbar = () => {
   }
 
   return (
+    
     <header className="header_section" style={{ backgroundColor: "#111", padding: "1px 0", position: "sticky", top: 0, zIndex: 1030 }}>
       <div className="container-fluid">
         <nav className="navbar navbar-expand-lg custom_nav-container">
@@ -54,7 +59,7 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse py-2" id="navbarSupportedContent">
             <ul className="navbar-nav mx-auto">
-              <li className="nav-item active" alt="Inicio">
+              <li className={location.pathname.includes()} alt="Inicio">
                 <Link className="nav-link" to="/">Inicio</Link>
               </li>
               <li className="nav-item" alt="Menú">
