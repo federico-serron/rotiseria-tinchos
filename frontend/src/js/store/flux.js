@@ -156,13 +156,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			///////////////////////////////////////////////// MENU /////////////////////////////////////////////////////////////////
-			getMenuItems: async () => {
-				const URLgetMenuItems = `${backendUrl}/menu/`;
+			getMenuItems: async (page, perPage) => {
+				const URLgetMenuItems = `${backendUrl}/menu`;
 				const store = getStore()
+				const queryParams = []
 
 				try {
 
-					const response = await fetch(URLgetMenuItems, {
+					queryParams.push(`page=${page ?? 1}`);
+					queryParams.push(`per_page=${page ?? 10}`);
+
+					const response = await fetch(queryParams.length > 0 ? `URLgetMenuItems${queryParams}` : URLgetMenuItems, {
 						method: "GET"
 					})
 
