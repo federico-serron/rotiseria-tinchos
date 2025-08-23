@@ -1,16 +1,24 @@
 import React, { useState, useContext } from "react";
 import { FaUser, FaSearch, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/images/logoSvg.png";
 import { useAuth } from "../hooks/useAuth";
 import { Context } from '../js/store/appContext';
 
 
 const Navbar = () => {
+  const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { store, actions } = useContext(Context);
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  const linksNavbar = [
+    { name: "Inicio", path: "/", alt: "Inicio" },
+    { name: "Menú", path: "/menu", alt: "Menú" },
+    { name: "¿Quiénes somos?", path: "/about", alt: "Quiénes somos?" },
+    { name: "Contáctanos", path: "/contact", alt: "Contáctanos" },
+  ]
 
   const toggleNavbar = () => {
     setIsCollapsed(!isCollapsed);
@@ -23,7 +31,7 @@ const Navbar = () => {
       if (resp) {
         navigate('/')
         return
-      }else{
+      } else {
         console.log("No pudimos deslogeuarte")
         return
       }
@@ -31,6 +39,7 @@ const Navbar = () => {
   }
 
   return (
+
     <header className="header_section" style={{ backgroundColor: "#111", padding: "1px 0", position: "sticky", top: 0, zIndex: 1030 }}>
       <div className="container-fluid">
         <nav className="navbar navbar-expand-lg custom_nav-container">
@@ -54,24 +63,17 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse py-2" id="navbarSupportedContent">
             <ul className="navbar-nav mx-auto">
-              <li className="nav-item active" alt="Inicio">
-                <Link className="nav-link" to="/">Inicio</Link>
-              </li>
-              <li className="nav-item" alt="Menú">
-                <Link className="nav-link" to="/menu">Menú</Link>
-              </li>
-              <li className="nav-item" alt="¿Quiénes somos?">
-                <Link className="nav-link" to="/about">¿Quiénes somos?</Link>
-              </li>
-              <li className="nav-item" alt="Contáctanos">
-                <Link className="nav-link" to="/contact">Contáctanos</Link>
-              </li>
+              {linksNavbar.map((link, idx) => (
+                <li key={idx} className={`nav-item ${location.pathname === link.path ? 'active' : ''}`} alt={link.alt}>
+                  <Link className="nav-link" to={link.path}>{link.name}</Link>
+                </li>
+              ))}
             </ul>
             <div className="user_option ">
               {isAuthenticated &&
-               <Link onClick={handleLogout} className="user_link text-danger">
-                <FaSignOutAlt />
-              </Link>}
+                <Link onClick={handleLogout} className="user_link text-danger">
+                  <FaSignOutAlt />
+                </Link>}
               <Link to="/login" className="user_link">
                 <FaUser />
               </Link>
