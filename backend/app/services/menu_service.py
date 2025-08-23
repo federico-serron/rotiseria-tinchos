@@ -17,7 +17,7 @@ def     get_menu_service(page, per_page):
     Raises:
         NotFoundError: If no menu items are found.
     """
-    query = db.paginate(Menu.query, page=page, per_page=per_page, error_out=False)
+    query = db.paginate(Menu.query.filter_by(is_available=True), page=page, per_page=per_page, error_out=False)
      
     if not query.items:
         raise NotFoundError("No hay menus disponibles aun.")

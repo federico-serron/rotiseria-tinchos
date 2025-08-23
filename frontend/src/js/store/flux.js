@@ -12,6 +12,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			menu: [],
 			categories: [],
+			pagination: {},
+
 		},
 		actions: {
 
@@ -156,7 +158,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			///////////////////////////////////////////////// MENU /////////////////////////////////////////////////////////////////
-			getMenuItems: async (page, perPage) => {
+			getMenuItemsPaginated: async (page, perPage) => {
 				const URLgetMenuItems = `${backendUrl}/menu`;
 				const store = getStore()
 				const queryParams = []
@@ -164,9 +166,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 
 					queryParams.push(`page=${page ?? 1}`);
-					queryParams.push(`per_page=${page ?? 10}`);
+					queryParams.push(`per_page=${perPage ?? 10}`);
 
-					const response = await fetch(queryParams.length > 0 ? `URLgetMenuItems${queryParams}` : URLgetMenuItems, {
+					const response = await fetch(queryParams.length > 0 ? `${URLgetMenuItems}?${queryParams.join('&')}` : URLgetMenuItems, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({
+						...store,
+						menu: data.menu,
+						pagination: {
+							...store.pagination,
+							total: data.total,
+							page: data.page,
+							per_page: data.per_page,
+							pages: data.pages,
+							has_next: data.has_next,
+							has_prev: data.has_prev,
+							next_num: data.next_num,
+							prev_num: data.prev_num
+						}
+					});
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+
+			getMenuItems: async () => {
+				const URLgetMenuItems = `${backendUrl}/menu`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(URLgetMenuItems, {
 						method: "GET"
 					})
 

@@ -3,6 +3,7 @@ import { Context } from '../js/store/appContext';
 import MenuModal from './MenuModal.jsx';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
+import { Pagination } from '@mui/material';
 
 const ListMenu = () => {
   const { store, actions } = useContext(Context);
@@ -13,7 +14,7 @@ const ListMenu = () => {
     setSelectedItem(null);
     const resp = await actions.getCategories();
 
-    if(!resp){
+    if (!resp) {
       toast.error(store.error)
       return
     }
@@ -57,9 +58,18 @@ const ListMenu = () => {
     handleSuccess();
   }
 
+  const handleChange = async (event, value)=>{
+    const resp = await actions.getMenuItemsPaginated(value)
+    if(!resp){
+      toast.error(store.error);
+      return;
+    }
+
+  }
+
   useEffect(() => {
     const fetchMenuItems = async () => {
-      const resp = await actions.getMenuItems();
+      const resp = await actions.getMenuItemsPaginated();
       if (!resp) {
         toast.error(store.error)
         return
@@ -132,6 +142,15 @@ const ListMenu = () => {
           ))}
         </tbody>
       </table>
+      <div>
+        <Pagination
+          count={store.pagination.pages}
+          onChange={handleChange}
+          variant='outlined'
+          color="secondary"
+          sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+        />
+      </div>
 
       {/* Add/Edit Modal */}
       <MenuModal
