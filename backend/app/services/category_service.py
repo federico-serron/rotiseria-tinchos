@@ -3,6 +3,27 @@ from app.models import User, Category
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
 
+def get_categories_service_paginated(page, per_page):
+    """
+    Fetches all categories from the database.
+
+    Receives:
+        None
+
+    Returns:
+        list -> A list of serialized category objects.
+
+    Raises:
+        NotFoundError: If no categories are found.
+    """
+    query = db.paginate(Category.query, page=page, per_page=per_page, error_out=False)
+    
+    if not query.items:
+        raise NotFoundError("No hay categorias disponibles")
+    
+    return query
+
+
 def get_categories_service():
     """
     Fetches all categories from the database.

@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Context } from '../../js/store/appContext';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { Pagination } from '@mui/material';
+
 
 const AdminCategories = () => {
     const { store, actions } = useContext(Context);
@@ -11,6 +13,15 @@ const AdminCategories = () => {
         name: '',
         note: ''
     });
+
+    const handleChange = async (event, value) => {
+        const resp = await actions.getCategoriesPaginated(value)
+        if (!resp) {
+            toast.error(store.error);
+            return;
+        }
+
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -96,7 +107,7 @@ const AdminCategories = () => {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const resp = await actions.getCategories();
+            const resp = await actions.getCategoriesPaginated();
             if (!resp) {
                 toast.error(store.error);
                 return;
@@ -140,7 +151,7 @@ const AdminCategories = () => {
                 <tbody>
                     {store.categories.map((category, index) => (
                         <tr key={category.id}>
-                            <td>{index+1}</td>
+                            <td>{index + 1}</td>
                             <td>{category.name}</td>
                             <td>{category.note}</td>
                             <td>
@@ -165,6 +176,15 @@ const AdminCategories = () => {
                     ))}
                 </tbody>
             </table>
+            <div>
+                <Pagination
+                    count={store.catPagination.pages}
+                    onChange={handleChange}
+                    variant='outlined'
+                    color="secondary"
+                    sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}
+                />
+            </div>
 
             {/* Add/Edit Modal */}
             <div
