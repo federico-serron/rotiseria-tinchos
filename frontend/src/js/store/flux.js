@@ -13,6 +13,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			menu: [],
 			categories: [],
 			pagination: {},
+			catPagination: {},
 
 		},
 		actions: {
@@ -342,6 +343,52 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			///////////////////////////////////////////////// CATEGORIES /////////////////////////////////////////////////////////////////
+			getCategoriesPaginated: async (page, perPage) => {
+				const URLgetCategories = `${backendUrl}/categories/paginated`;
+				const store = getStore()
+				const queryParams = []
+
+				try {
+
+					queryParams.push(`page=${page ?? 1}`);
+					queryParams.push(`per_page=${perPage ?? 6}`);
+
+					const response = await fetch(queryParams.length > 0 ? `${URLgetCategories}?${queryParams.join('&')}` : URLgetCategories, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({
+						...store,
+						categories: data.categories,
+						catPagination: {
+							...store.catPagination,
+							total: data.total,
+							page: data.page,
+							per_page: data.per_page,
+							pages: data.pages,
+							has_next: data.has_next,
+							has_prev: data.has_prev,
+							next_num: data.next_num,
+							prev_num: data.prev_num
+						}
+					});
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+
 			getCategories: async () => {
 				const URLgetCategories = `${backendUrl}/categories/`;
 				const store = getStore()

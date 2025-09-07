@@ -7,7 +7,7 @@ from app.utils import allowed_file
 import os
 
 
-def     get_menu_service(page, per_page):
+def get_menu_service(page, per_page):
     """
     Retrieves the menu items from the database.
     

@@ -1,11 +1,37 @@
 from flask import Blueprint, request, jsonify # Blueprint para modularizar y relacionar con app
 from flask_jwt_extended import jwt_required, get_jwt_identity   # Jwt para tokens
 from app.services.auth_service import is_user_admin
-from app.services.category_service import get_categories_service, add_category_service, edit_category_service, delete_category_service
+from app.services.category_service import get_categories_service, get_categories_service_paginated, add_category_service, edit_category_service, delete_category_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
-category_bp = Blueprint('api/categories', __name__)     # instanciar admin_bp desde clase Blueprint para crear las rutas.
+category_bp = Blueprint('api/categories', __name__)
 
+
+@category_bp.route('/paginated', methods=['GET'])
+def get_categories_paginated():
+    
+    page = request.args.get("page"  , default=1, type=int)
+    per_page = request.args.get("per_page", default=6, type=int)
+    
+    try:
+        query_result = get_categories_service_paginated(page=page, per_page=per_page)
+        
+        return jsonify({'categories': [item.serialize() for item in query_result.items],
+                                "page": query_result.page,
+                                "per_page": query_result.per_page,
+                                "pages": query_result.pages,
+                                "has_next": query_result.has_next,
+                                "has_prev": query_result.has_prev,
+                                "next_num": query_result.next_num,
+                                "prev_num": query_result.prev_num
+                                }), 200
+
+    except NotFoundError as e:
+        return jsonify({'error': str(e)}), 404
+
+    except Exception as e:
+        return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
+    
 
 @category_bp.route('/', methods=['GET'])
 def get_categories():
