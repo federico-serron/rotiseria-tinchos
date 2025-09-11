@@ -10,10 +10,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logged_user: {},
 			user_loaded: false,
 			users: [],
-			menu: [],
+			menu: {},
+			menuItem: [],
 			categories: [],
 			pagination: {},
 			catPagination: {},
+			invoicePagination: {},
+			userPagination: {},
 
 		},
 		actions: {
@@ -231,6 +234,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 			},
+
+
+			getMenuItemById: async (id) => {
+				const URLgetMenuItemById = `${backendUrl}/menu/`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(`${URLgetMenuItemById}/${id}`, {
+						method: "GET"
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({ ...store, menuItem: data.menu })
+					return true
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
 
 			addMenuItem: async (formData) => {
 				const URLAddMenuItem = `${backendUrl}/menu/`;

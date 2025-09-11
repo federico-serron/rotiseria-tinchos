@@ -25,6 +25,26 @@ def get_menu_service(page, per_page):
     return query
 
 
+def get_menu_by_id_service(id):
+    """
+    Retrieves the specific menu item from the database.
+    
+    Returns:
+        dict: A dict of the menu item.
+    
+    Raises:
+        NotFoundError: If no menu item is not found.
+    """
+    if not int(id):
+        raise BadRequestError("El elemento que esta buscando no existe")
+    menu_item = Menu.query.filter_by(id=id).first()
+     
+    if not menu_item:
+        raise NotFoundError("No hay menus disponibles aun.")
+    
+    return menu_item.serialize()
+
+
 def add_menu_item_service(name, description, price, category_id, image):
     """    Adds a new menu item to the database."""
     MAX_FILE_SIZE = 1 * 1024 * 1024  # 1 MB en bytes

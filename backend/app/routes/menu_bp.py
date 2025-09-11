@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify # Blueprint para modularizar y relacionar con app
 from flask_jwt_extended import jwt_required, get_jwt_identity   # Jwt para tokens
 from app.services.auth_service import is_user_admin
-from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce
+from app.services.menu_service import get_menu_service, add_menu_item_service, edit_menu_item_service, delete_menu_item_serivce, get_menu_by_id_service
 from app.exceptions import NotFoundError, UnauthorizedError, ConflictError, BadRequestError
 
 menu_bp = Blueprint('api/menu', __name__)
@@ -27,6 +27,23 @@ def get_menu():
 
     except NotFoundError as e:
         return jsonify({'error': str(e)}), 404
+
+    except Exception as e:
+        return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
+    
+    
+@menu_bp.route('/<int:id>', methods=['GET'])
+def get_menu_by_id(id):
+    
+    try:
+        menu_item = get_menu_by_id_service(id)
+        
+        return jsonify({'menu': menu_item}), 200
+
+    except NotFoundError as e:
+        return jsonify({'error': str(e)}), 404
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
 
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500
