@@ -11,6 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			user_loaded: false,
 			users: [],
 			menu: [],
+			menuCount: 0,
 			categories: [],
 			pagination: {},
 			catPagination: {},
@@ -159,6 +160,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			///////////////////////////////////////////////// MENU /////////////////////////////////////////////////////////////////
+			getMenuCount: async () => {
+				const URLgetMenuCount = `${backendUrl}/menu/menucount`;
+				const store = getStore()
+
+				try {
+
+					const response = await fetch(URLgetMenuCount, {
+						method: "GET",
+						credentials: "include",
+					})
+
+					const data = await response.json()
+
+					if (!response.ok) {
+						throw new Error(data.error);
+					}
+
+					setStore({...store,	menuCount: data.menu_count});
+					return data.menu_count;
+
+				} catch (error) {
+					setStore({ ...store, error: error.message })
+					console.error(store.error)
+					return false
+				}
+
+			},
+
+
 			getMenuItemsPaginated: async (page, perPage) => {
 				const URLgetMenuItems = `${backendUrl}/menu`;
 				const store = getStore()

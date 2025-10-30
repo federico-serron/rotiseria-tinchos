@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Context } from '../../js/store/appContext';
 import { useAuth } from '../../hooks/useAuth';
 
 const AdminDashboard = () => {
@@ -11,14 +12,23 @@ const AdminDashboard = () => {
     { to: '/admin/categorias', label: 'Categorias' },
   ];
 
-
+  const {store, actions} = useContext(Context);
   const { role, userId } = useAuth()
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [menuCount, setMenuCount] = useState(store.menuCount);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    const fetchMenuCount = async () => {
+      const menuCounter = await actions.getMenuCount();
+      setMenuCount(menuCounter);
+    }
+    fetchMenuCount();
+  }, [store.menu]);
 
   return (
     <div className="container-fluid min-vh-100 bg-light">
@@ -79,7 +89,7 @@ const AdminDashboard = () => {
                 <div className="card text-white bg-warning mb-3">
                   <div className="card-body">
                     <h5 className="card-title">Productos</h5>
-                    <p className="card-text">230 disponibles</p>
+                    <p className="card-text">{menuCount} disponibles</p>
                   </div>
                 </div>
               </div>

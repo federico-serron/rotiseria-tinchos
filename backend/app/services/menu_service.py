@@ -6,6 +6,16 @@ from werkzeug.utils import secure_filename
 from app.utils import allowed_file
 import os
 
+def get_menu_count_service():
+    """
+    Retrieves the total count of menu items.
+    
+    Returns:
+        int: The total count of menu items.
+    """
+    return Menu.query.count()
+
+
 
 def get_menu_service(page, per_page):
     """
