@@ -77,8 +77,9 @@ const Navbar = () => {
               <Link to="/login" className="user_link">
                 <FaUser />
               </Link>
-              <Link className="cart_link" to="#">
-                <FaShoppingCart />
+              <Link className="cart_link icon-wrapper" to="/cart">
+                <FaShoppingCart className="icon" />
+                 {store.cart.length > 0 && <span className="badge">{store.cart.length}</span>}
               </Link>
               <form className="form-inline" onSubmit={e => e.preventDefault()}>
                 <button className="btn" type="submit" style={{ color: "white" }}>
