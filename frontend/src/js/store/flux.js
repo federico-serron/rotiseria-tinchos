@@ -15,7 +15,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			categories: [],
 			pagination: {},
 			catPagination: {},
-			cart: [],
+			cart: ["prueba"],
 
 		},
 		actions: {
