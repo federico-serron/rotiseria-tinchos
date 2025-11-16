@@ -16,6 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			pagination: {},
 			catPagination: {},
 			cart: ["prueba"],
+			
 
 		},
 		actions: {
