@@ -13,7 +13,7 @@ Este proyecto es una aplicación fullstack que utiliza Flask para el backend y R
 
 - 🐍 Python 3.11+
 - 🟦 Node.js 18+ y npm
-- 🐳 (Opcional) Docker y Docker Compose
+- 🐳 Docker y Docker Compose 
 
 ---
 
