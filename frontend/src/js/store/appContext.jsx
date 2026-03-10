@@ -20,6 +20,7 @@ const injectContext = PassedComponent => {
 		);
 
 		useEffect(() => {
+			state.actions.loadCartFromStorage();
 		}, []);
 
 

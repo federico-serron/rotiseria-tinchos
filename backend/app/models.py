@@ -96,6 +96,9 @@ class Invoice(db.Model):
     date: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now(timezone.utc))
     total: Mapped[float] = mapped_column(Float, nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    payment_id: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+    payment_provider: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
+    payment_status: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
     
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
     user: Mapped['User'] = relationship('User', back_populates='invoices')
@@ -109,6 +112,9 @@ class Invoice(db.Model):
             'total': self.total,
             'user_id': self.user_id,
             'status': self.status,
+            'payment_id': self.payment_id,
+            'payment_provider': self.payment_provider,
+            'payment_status': self.payment_status,
             'invoice_menus': [invoice_menu.serialize() for invoice_menu in self.invoice_menus]
         }
         

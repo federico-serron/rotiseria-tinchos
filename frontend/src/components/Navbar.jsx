@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { FaUser, FaSearch, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/images/logoSvg.png";
@@ -12,6 +12,7 @@ const Navbar = () => {
   const { store, actions } = useContext(Context);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const cartCount = useMemo(() => actions.getCartCount(), [store.cart]);
 
   const linksNavbar = [
     { name: "Inicio", path: "/", alt: "Inicio" },
@@ -77,15 +78,20 @@ const Navbar = () => {
               <Link to="/login" className="user_link">
                 <FaUser />
               </Link>
-              <Link className="cart_link" to="#">
+              <Link className="cart_link position-relative" to="/cart">
                 <FaShoppingCart />
+                {cartCount > 0 && (
+                  <span className="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
               <form className="form-inline" onSubmit={e => e.preventDefault()}>
                 <button className="btn" type="submit" style={{ color: "white" }}>
                   <FaSearch />
                 </button>
               </form>
-              <Link to="/" className="order_online" style={{ color: "white" }}>Ordenar Online</Link>
+              <Link to="/cart" className="order_online" style={{ color: "white" }}>Ordenar Online</Link>
             </div>
           </div>
         </nav>
