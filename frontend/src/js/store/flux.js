@@ -10,7 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logged_user: {},
 			user_loaded: false,
 			users: [],
-			menu: {},
+			menu: [],
 			menuItem: [],
 			categories: [],
 			pagination: {},
