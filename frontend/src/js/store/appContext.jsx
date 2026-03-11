@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import getState from "./flux.js";
 
 
@@ -6,20 +6,31 @@ export const Context = React.createContext(null);
 
 const injectContext = PassedComponent => {
 	const StoreWrapper = props => {
-		//this will be passed as the contenxt value
-		const [state, setState] = useState(
-			getState({
-				getStore: () => state.store,
-				getActions: () => state.actions,
+		const storeRef = useRef(null);
+		const actionsRef = useRef(null);
+
+		//this will be passed as the context value
+		const [state, setState] = useState(() => {
+			const initialState = getState({
+				getStore: () => storeRef.current,
+				getActions: () => actionsRef.current,
 				setStore: updatedStore =>
-					setState({
-						store: Object.assign(state.store, updatedStore),
-						actions: { ...state.actions }
+					setState(prevState => {
+						const newStore = { ...prevState.store, ...updatedStore };
+						storeRef.current = newStore;
+						return {
+							store: newStore,
+							actions: prevState.actions
+						};
 					})
-			})
-		);
+			});
+			storeRef.current = initialState.store;
+			actionsRef.current = initialState.actions;
+			return initialState;
+		});
 
 		useEffect(() => {
+			state.actions.loadCartFromStorage();
 		}, []);
 
 

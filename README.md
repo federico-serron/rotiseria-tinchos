@@ -93,12 +93,16 @@ FLASK_APP=app.py
 FLASK_ENV=development
 SECRET_KEY=your-secret-key-here
 DATABASE_URL=sqlite:///app.db
+PAYPAL_CLIENT_ID=tu-client-id-sandbox
+PAYPAL_CLIENT_SECRET=tu-secret-sandbox
+# Opcional: PAYPAL_API_BASE=https://api-m.sandbox.paypal.com
 ```
 
 ### frontend/.env
 ```
 VITE_BACKEND_URL=http://localhost:5000
 VITE_BASENAME=/
+VITE_PAYPAL_CLIENT_ID=tu-client-id-sandbox
 ```
 
 ---

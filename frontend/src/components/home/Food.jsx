@@ -17,10 +17,11 @@ export default function FoodSection() {
   const { store, actions } = useContext(Context);
   const [filter, setFilter] = useState("*");
 
+  const menu = Array.isArray(store.menu) ? store.menu : [];
   const filteredItems =
     filter === "*"
-      ? store.menu
-      : store.menu.filter((item) => item.category_id === filter);
+      ? menu
+      : menu.filter((item) => item.category_id === filter);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -54,7 +55,7 @@ export default function FoodSection() {
           <li className={filter === "*" ? 'active' : 'none'}
           onClick={() => setFilter("*")}>Todo</li>
 
-          {store.categories.map(({ id, name }) => (
+          {(Array.isArray(store.categories) ? store.categories : []).map(({ id, name }) => (
             <li
               key={id}
               className={filter === id ? "active" : ""}

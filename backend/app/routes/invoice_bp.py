@@ -28,14 +28,17 @@ def get_invoices():
 def add_invoice_menu():
     
     user_id = get_jwt_identity()
-    data = request.get_json()
+    data = request.get_json() or {}
+    items = data.get("items") if isinstance(data, dict) else data
     
     try:
-        invoice_menu = add_invoice_menu_service(user_id, data)
+        invoice_menu = add_invoice_menu_service(user_id, items)
         return jsonify({'invoice': invoice_menu}), 201
 
     except NotFoundError as e:
         return jsonify({'error': str(e)}), 404
+    except BadRequestError as e:
+        return jsonify({'error': str(e)}), 400
 
     except Exception as e:
         return jsonify({'error':'Hubo un error en el servidor, contacta al Admin por favor'}), 500

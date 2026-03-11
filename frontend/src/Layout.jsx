@@ -19,6 +19,7 @@ import NotFound from './views/NotFound.jsx';
 import ListMenu from './components/ListMenu.jsx';
 import ListUsers from './components/ListUsers.jsx';
 import AdminCategories from './components/admin/AdminCategories.jsx';
+import Cart from './views/Cart.jsx';
 
 
 const Layout = () => {
@@ -45,6 +46,7 @@ const Layout = () => {
           <Route path='/contact' element={<Booking />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/cart' element={<Cart />} />
 
           {/* User Panel */}
           <Route path='/dashboard' element={

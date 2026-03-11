@@ -10,13 +10,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logged_user: {},
 			user_loaded: false,
 			users: [],
-			menu: {},
+			menu: [],
 			menuItem: [],
 			categories: [],
 			pagination: {},
 			catPagination: {},
 			invoicePagination: {},
 			userPagination: {},
+			cart: [],
 
 		},
 		actions: {
@@ -555,6 +556,193 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false
 				}
 
+			},
+
+			///////////////////////////////////////////////// CART /////////////////////////////////////////////////////////////////
+			loadCartFromStorage: () => {
+				const store = getStore();
+				if (typeof window === "undefined") return [];
+				try {
+					const saved = localStorage.getItem("cart");
+					const parsed = saved ? JSON.parse(saved) : [];
+					setStore({ ...store, cart: parsed });
+					return parsed;
+				} catch {
+					setStore({ ...store, cart: [] });
+					return [];
+				}
+			},
+
+			_saveCart: (cart) => {
+				if (typeof window === "undefined") return;
+				localStorage.setItem("cart", JSON.stringify(cart));
+			},
+
+			addToCart: (item) => {
+				const store = getStore();
+				const existingItem = store.cart.find((cartItem) => cartItem.id === item.id);
+				let updatedCart;
+
+				if (existingItem) {
+					updatedCart = store.cart.map((cartItem) =>
+						cartItem.id === item.id
+							? { ...cartItem, quantity: cartItem.quantity + 1 }
+							: cartItem
+					);
+				} else {
+					updatedCart = [...store.cart, { ...item, quantity: 1 }];
+				}
+
+				setStore({ ...store, cart: updatedCart });
+				getActions()._saveCart(updatedCart);
+				return updatedCart;
+			},
+
+			updateCartQuantity: (menuId, quantity) => {
+				const store = getStore();
+				if (quantity <= 0) return getActions().removeFromCart(menuId);
+
+				const updatedCart = store.cart.map((item) =>
+					item.id === menuId ? { ...item, quantity } : item
+				);
+
+				setStore({ ...store, cart: updatedCart });
+				getActions()._saveCart(updatedCart);
+				return updatedCart;
+			},
+
+			removeFromCart: (menuId) => {
+				const store = getStore();
+				const updatedCart = store.cart.filter((item) => item.id !== menuId);
+				setStore({ ...store, cart: updatedCart });
+				getActions()._saveCart(updatedCart);
+				return updatedCart;
+			},
+
+			clearCart: () => {
+				const store = getStore();
+				setStore({ ...store, cart: [] });
+				getActions()._saveCart([]);
+			},
+
+			getCartTotal: () => {
+				const store = getStore();
+				return store.cart.reduce((total, item) => total + (item.price || 0) * item.quantity, 0);
+			},
+
+			getCartCount: () => {
+				const store = getStore();
+				return store.cart.reduce((acc, item) => acc + item.quantity, 0);
+			},
+
+			_createPayloadFromCart: () => {
+				const store = getStore();
+				return store.cart.map((item) => ({
+					menu_id: item.id,
+					quantity: item.quantity
+				}));
+			},
+
+			createInvoice: async () => {
+				const store = getStore();
+				const URLInvoice = `${backendUrl}/invoices/`;
+				const items = getActions()._createPayloadFromCart();
+
+				if (items.length === 0) {
+					setStore({ ...store, error: "El carrito está vacío" });
+					return null;
+				}
+
+				try {
+					const response = await fetch(URLInvoice, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({ items }),
+						credentials: "include"
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						throw new Error(data.error || "No pudimos crear la orden");
+					}
+
+					setStore({ ...store, message: "Orden creada correctamente" });
+					return data.invoice;
+				} catch (error) {
+					setStore({ ...store, error: error.message });
+					return null;
+				}
+			},
+
+			createPaypalOrder: async () => {
+				const store = getStore();
+				const URLPaypalOrder = `${backendUrl}/payments/paypal/create-order`;
+				const items = getActions()._createPayloadFromCart();
+
+				if (items.length === 0) {
+					setStore({ ...store, error: "El carrito está vacío" });
+					return null;
+				}
+
+				try {
+					const response = await fetch(URLPaypalOrder, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({ items }),
+						credentials: "include"
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						throw new Error(data.error || "No pudimos iniciar el pago");
+					}
+
+					return data;
+				} catch (error) {
+					setStore({ ...store, error: error.message });
+					return null;
+				}
+			},
+
+			capturePaypalOrder: async (orderId) => {
+				const store = getStore();
+				const URLPaypalCapture = `${backendUrl}/payments/paypal/capture`;
+				const items = getActions()._createPayloadFromCart();
+
+				if (items.length === 0) {
+					setStore({ ...store, error: "El carrito está vacío" });
+					return null;
+				}
+
+				try {
+					const response = await fetch(URLPaypalCapture, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json"
+						},
+						body: JSON.stringify({ order_id: orderId, items }),
+						credentials: "include"
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						throw new Error(data.error || "No pudimos confirmar el pago");
+					}
+
+					setStore({ ...store, message: "Pago aprobado", cart: [] });
+					getActions()._saveCart([]);
+					return data;
+				} catch (error) {
+					setStore({ ...store, error: error.message });
+					return null;
+				}
 			},
 
 			///////////////////////////////////////////////// INVOINCES /////////////////////////////////////////////////////////////////
